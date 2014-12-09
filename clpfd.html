@@ -1,0 +1,2793 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.8" />
+<title>CLP(FD) Constraint Logic Programming over Finite Domains</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+tt {
+  font-family: monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+.monospaced {
+  font-family: monospace;
+  font-size: inherit;
+  color: navy;
+}
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+/*
+ * Theme specific overrides of the preceding (asciidoc.css) CSS.
+ *
+ */
+body {
+  font-family: Garamond, Georgia, serif;
+  font-size: 17px;
+  color: #3E4349;
+  line-height: 1.3em;
+}
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Garmond, Georgia, serif;
+  font-weight: normal;
+  border-bottom-width: 0;
+  color: #3E4349;
+}
+div.title, caption.title { color: #596673; font-weight: bold; }
+h1 { font-size: 240%; }
+h2 { font-size: 180%; }
+h3 { font-size: 150%; }
+h4 { font-size: 130%; }
+h5 { font-size: 115%; }
+h6 { font-size: 100%; }
+#header h1 { margin-top: 0; }
+#toc {
+  color: #444444;
+  line-height: 1.5;
+  padding-top: 1.5em;
+}
+#toctitle {
+  font-size: 20px;
+}
+#toc a {
+    border-bottom: 1px dotted #999999;
+    color: #444444 !important;
+    text-decoration: none !important;
+}
+#toc a:hover {
+    border-bottom: 1px solid #6D4100;
+    color: #6D4100 !important;
+    text-decoration: none !important;
+}
+div.toclevel1 { margin-top: 0.2em; font-size: 16px; }
+div.toclevel2 { margin-top: 0.15em; font-size: 14px; }
+em, dt, td.hdlist1 { color: black; }
+strong { color: #3E4349; }
+a { color: #004B6B; text-decoration: none; border-bottom: 1px dotted #004B6B; }
+a:visited { color: #615FA0; border-bottom: 1px dotted #615FA0; }
+a:hover { color: #6D4100; border-bottom: 1px solid #6D4100; }
+div.tableblock > table, table.tableblock { border: 3px solid #E8E8E8; }
+th.tableblock, td.tableblock { border: 1px solid #E8E8E8; }
+ul > li > * { color: #3E4349; }
+pre, tt, .monospaced { font-family: Consolas,Menlo,'Deja Vu Sans Mono','Bitstream Vera Sans Mono',monospace; }
+tt, .monospaced { font-size: 0.9em; color: black;
+}
+div.exampleblock > div.content, div.sidebarblock > div.content, div.listingblock > div.content { border-width: 0 0 0 3px; border-color: #E8E8E8; }
+div.verseblock { border-left-width: 0; margin-left: 3em; }
+div.quoteblock { border-left-width: 3px; margin-left: 0; margin-right: 0;}
+div.admonitionblock td.content { border-left: 3px solid #E8E8E8; }
+
+
+div.imageblock {
+	float: right;
+	margin-left: 8px;
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>CLP(FD) Constraint Logic Programming over Finite Domains</h1>
+<span id="author">Anne Ogborn</span><br />
+<span id="email"><code>&lt;<a href="mailto:annie66us@yahoo.com">annie66us@yahoo.com</a>&gt;</code></span><br />
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a href="/swipltuts/index.html">Up to All Tutorials</a></p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_about_this_tutorial">1. About This Tutorial</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_who_should_do_this_tutorial">1.1. Who Should Do This Tutorial</h3>
+<div class="paragraph"><p>This tutorial is for reasonably experienced SWI-Prolog programmers who want to use clp(fd).</p></div>
+<div class="paragraph"><p>Additionally, this tutorial will be useful for Prolog programmers using other versions of Prolog who want to use clp(fd).</p></div>
+<div class="paragraph"><p>The emphasis of this tutorial is <strong>not</strong> on the theory. The author
+is not a mathematician and the tutorial will probably not be of
+much use to competent mathematicians who can approach the material
+via the academic literature.</p></div>
+<div class="paragraph"><p>This tutorial should give you a grasp of the fundamentals of constraint systems on finite domains.</p></div>
+<div class="paragraph"><p>A certain minimal amount of <em>practical wisdom</em> is covered.</p></div>
+<div class="paragraph"><p>But mostly this
+tutorial is a translation of the SWI-Prolog documentation of the clp(fd) predicates
+from the rather terse, math laden documentation
+to a more approachable level of English.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_what_is_clp_fd_good_for">1.2. What Is clp(fd) good for?</h3>
+<div class="paragraph"><p>clp(fd) is a library included in the standard SWI-Prolog distribution. It solves problems that involve sets of variables, where relationships among the variables need satisfied.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/Robert_Wadlow.jpg" alt="Robert Wadlow" />
+</div>
+</div>
+<div class="paragraph"><p>clp(fd) is also useful for replacing many of the guard functions provided by getters and setters in OO languages. For example, if we don&#8217;t know a person&#8217;s actual height yet, we can still assert that it&#8217;s more than 21 and less than 108 inches (shortest/tallest people known).
+When we eventually do find a solution, unreasonable values will be rejected.</p></div>
+<div class="paragraph"><p>clp(fd) is useful for optimizing search problems by reducing search spaces. Constraints can trim away entire subtrees of the search space.</p></div>
+<div class="paragraph"><p>clp(fd) is useful for solving a wide variety of <em>find values for these variables</em> problems. Here are some broad categories of problems that clp(fd) can address:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Scheduling problems, like, <em>when should we do what work in this factory to make these products?</em>
+</p>
+</li>
+<li>
+<p>
+Optimization problems, like <em>which mix of products should we make in this factory to maximize profits?</em>
+</p>
+</li>
+<li>
+<p>
+Satisficing problems,  like finding an arrangement of rooms in a hospital that meets criteria like having the operating theater near the recovery rooms, or finding a set of vacation plans the whole family can agree on.
+</p>
+</li>
+<li>
+<p>
+Sequence problems, like finding a travel itinerary that gets us to our destination.
+</p>
+</li>
+<li>
+<p>
+Labeling problems, like Sudoku or Cryptarithm puzzles
+</p>
+</li>
+<li>
+<p>
+Problems of belief and intention, like detective puzzles and NPC&#8217;s in games
+</p>
+</li>
+<li>
+<p>
+Allocation problems, like finding an assignment of flight crews to aircraft that meets union requirements for maximum time away from home
+</p>
+</li>
+<li>
+<p>
+finding acceptable solutions to linked sets of variables, for example, working out who&#8217;se going to the party among a group of jealous teenage girls when A will only go if B goes, but B won&#8217;t go if C goes, and so on
+</p>
+</li>
+<li>
+<p>
+Creating lists of acceptable alternatives for multiple interacting variables. For example, a caterer might want to see different offerings for a banquet menu that meet some criteria of cost, scheduling of cooks and waiters, ovens, and so on, then decide for themeselves which to select.
+</p>
+</li>
+<li>
+<p>
+Geometric constraints for graphics, eg. a CAD system, where two lines must be perpendicular, another two parallel, others 30 inches apart, and so on.
+</p>
+</li>
+</ul></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Uses of clp(fd) Exercise</div>
+<div class="paragraph"><p>Make up another example for each of the categories above. Try to expand the domain of the problem as much as you can. For example, given a set of train cars, putting them in an order that makes sense and obeys some rules (e.g. no tank cars next to the engine, the caboose has to be on the back) is a sequence problem.</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites">1.3. Prerequisites</h3>
+<div class="paragraph"><p>Competence in the basics of SWI-Prolog.</p></div>
+<div class="paragraph"><p>A level of mathematical sophistication comparable to that of an
+upper level standing in a computer science undergrad program.</p></div>
+<div class="paragraph"><p>A working SWI-Prolog installation.</p></div>
+<div class="paragraph"><p>There is no set of additional code for this tutorial. You can cut and paste many of the examples.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_what_you_can_expect_from_this_tutorial">1.4. What You Can Expect From This Tutorial</h3>
+<div class="paragraph"><p>If you read through this tutorial and work all the exercises you
+can expect to:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+understand the basic concept of constraint programming
+</p>
+</li>
+<li>
+<p>
+be able to write programs that find solutions to unknown values
+</p>
+</li>
+<li>
+<p>
+be able to formulate real world problems using the clp(fd) library predicates
+</p>
+</li>
+<li>
+<p>
+be able to select appropriate solutions to constraint system problems.
+</p>
+</li>
+<li>
+<p>
+understand how to use clp(fd) in real world SWI-Prolog programs.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_time_to_complete">1.5. Time to Complete</h3>
+<div class="paragraph"><p>Unknown as yet. When the first few people complete this tutorial I&#8217;ll ask them.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_clp_fd_library">2. The CLP(FD) Library</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The clp(fd) library for SWI-Prolog was written by Markus Trista for his PhD thesis. clp(fd) stands for <em>Constraint Logic Programming over Finite Domains</em>.</p></div>
+<div class="paragraph"><p>clp(fd) is one of several constraint solvers available in SWI-Prolog. The others are clp(b), clp(qr) and CHR. clp(b) handles booleans. clp(qr) handles rationals and reals. CHR approaches constraint programming differently, using rewrite rules.</p></div>
+<div class="paragraph"><p>The clp(fd) library can be activated by simply</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).</code></pre>
+</div></div>
+<div class="paragraph"><p>This installs a compile-time hook that optimizes some clp(fd) constraints, and loads a run-time library.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_variables">3. Variables</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>We use the term <em>variable</em> rather loosely in computer science.</p></div>
+<div class="sect2">
+<h3 id="_replacement_variables">3.1. Replacement Variables</h3>
+<div class="paragraph"><p>In imperative languages like Java variables are mutable.
+Their values change over time.</p></div>
+<div class="paragraph"><p>In C, a variable like x</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>int x;
+
+... what about here? ...
+
+x = 5;</code></pre>
+</div></div>
+<div class="paragraph"><p>always has a value. Before we assign 5 to it, the value is whatever happened to be in that memory location (a source of delight for security programmers everywhere).</p></div>
+</div>
+<div class="sect2">
+<h3 id="_logic_variables">3.2. Logic Variables</h3>
+<div class="paragraph"><p>Variables in a logic language are different. They are much more like variables or <em>unknowns</em> in high school algebra.</p></div>
+<div class="paragraph"><p>In Prolog a variable
+can be bound or unbound. An unbound variable will unify with any
+value. A bound variable unifies only with one template.</p></div>
+<div class="paragraph"><p>In effect, we either know, or don&#8217;t know, the value of the variable.</p></div>
+<div class="paragraph"><p>When we try to unify, we are, effectively, asking, "is what we know
+about the answer on the left compatible with what we know about the answer on the right?"
+Bob claims to be good friends with the Mayor of Maintown. If Bob&#8217;s the editor of the Maintown Daily, that&#8217;s entirely believable. If Bob also claims to have never set foot in Maintown, it&#8217;s inconsistent.</p></div>
+<div class="paragraph"><p>In Prolog we have only two possibilities, for an atomic result. Know absolutely nothing, or know exactly. Obviously we might have unbound variables within a list or term, but for each variable there are only these two states.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_constrained_variables">3.3. Constrained Variables</h3>
+<div class="paragraph"><p>But in the real world we can say more about a variable.</p></div>
+<div class="paragraph"><p>We might not know the exact value, but we know it is one of a set of possible values.</p></div>
+<div class="paragraph"><p>We might know it&#8217;s value is, say, greater than the value of some other variable, whose value we also don&#8217;t know. We say the variable is <strong>constrained</strong>.</p></div>
+<div class="paragraph"><p>As we begin to accumulate constraints, we start to be able to
+reason about the constraints.
+Suppose we have two variables, X and Y, which are integers.</p></div>
+<div class="paragraph"><p>Now I tell you that X is in the range 0 to 10.</p></div>
+<div class="paragraph"><p>Further I tell you that Y is in range 4 to 8.</p></div>
+<div class="paragraph"><p>And finally that X is more than Y.</p></div>
+<div class="paragraph"><p>You can infer that X is within the narrower range 5 to 10, since the lowest value Y can have is 4, and X must be one more than Y.</p></div>
+<div class="paragraph"><p>Here&#8217;s how it looks in clp(fd). Don&#8217;t worry if you don&#8217;t understand all of this yet</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).         <img src="./images/icons/callouts/1.png" alt="1" />
+
+test(X, Y) :-
+    X in 0..10,     <img src="./images/icons/callouts/2.png" alt="2" />
+        Y in 4..8,      <img src="./images/icons/callouts/3.png" alt="3" />
+        X #&gt; Y.         <img src="./images/icons/callouts/4.png" alt="4" />
+
+
+14 ?- test(X, Y).
+X in 5..10,           <img src="./images/icons/callouts/5.png" alt="5" />
+Y#=&lt;X+ -1,     <img src="./images/icons/callouts/6.png" alt="6" />
+Y in 4..8.</code></pre>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="./images/icons/callouts/1.png" alt="1" /></td><td>
+include the clp(fd) library
+</td></tr>
+<tr><td><img src="./images/icons/callouts/2.png" alt="2" /></td><td>
+constrain X to be in 0 through 10 using the <em>in</em> operator
+</td></tr>
+<tr><td><img src="./images/icons/callouts/3.png" alt="3" /></td><td>
+constrain Y to be in 4 through 8 using the <em>in</em> operator
+</td></tr>
+<tr><td><img src="./images/icons/callouts/4.png" alt="4" /></td><td>
+constrain X to be greater than Y using the <em>#&gt;</em> operator
+</td></tr>
+<tr><td><img src="./images/icons/callouts/5.png" alt="5" /></td><td>
+X is now constrained to 5 through 10
+</td></tr>
+<tr><td><img src="./images/icons/callouts/6.png" alt="6" /></td><td>
+Y is now constrained to be =&lt; X - 1 (same as X &gt; Y), and in the range 4 through 8.
+</td></tr>
+</table></div>
+<div class="paragraph"><p>When we have constrained a variable to a single value, something rather magical happens - we now know the value of the variable, so we can bind the variable. And in clp(fd) this is indeed what happens! Suppose I constrain X to the range 0 to 5, and Y to 4 to 8, and X &gt; Y, then suddenly X is now in bound to 5. ground(X) succeeds, and X is a perfectly ordinary bound variable.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).
+
+test2(X, Y) :-
+     X in 0..5,
+         Y in 4..8,
+         X #&gt; Y.
+
+16 ?- test2(X,Y).
+X = 5,     <img src="./images/icons/callouts/1.png" alt="1" />
+Y = 4.     <img src="./images/icons/callouts/2.png" alt="2" /></code></pre>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="./images/icons/callouts/1.png" alt="1" /></td><td>
+X is bound just like normal Prolog
+</td></tr>
+<tr><td><img src="./images/icons/callouts/2.png" alt="2" /></td><td>
+Notice that Y is bound too. Further, it&#8217;s lost it&#8217;s original constraints
+</td></tr>
+</table></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">punch and run Exercise</div>
+<div class="paragraph"><p>Type in and try the two examples above. Step into them with the graphic debugger to see the constraints listed.</p></div>
+</div></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">backtracking Exercise</div>
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).
+
+foo(X) :- X in 1..3 .
+foo(X) :- X in 5..7 .
+foo(X) :- X in 8..12 .</code></pre>
+</div></div>
+<div class="paragraph"><p>What will happen if you query foo(X) and get all the solutions by backtracking?
+Predict what will happen, and then try it. Was your prediction correct?</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_implementation">3.4. Implementation</h3>
+<div class="paragraph"><p>SWI-Prolog has the ability to add <strong>attributes</strong> to variables. This is additional meta-data attached to the variable. If you&#8217;re interested, you can read more about attributed variables at <a href="http://swi-prolog.org/pldoc/man?section=attvar">The SWI-Prolog website</a>.</p></div>
+<div class="paragraph"><p>clp(fd) uses this attribute data to decorate the variables with constraints. Then clp(fd) implements constraint programming
+as an expansion of the normal Prolog unification.</p></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">attributes Exercise</div>
+<div class="paragraph"><p>Extra credit -</p></div>
+<div class="paragraph"><p>Think up another use for attributes on variables besides constraints</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_domains">3.5. Domains</h3>
+<div class="paragraph"><p>The (fd) in clp(fd) stands for <em>finite domain</em>. This domain could have millions of values, but it must be a finite list.</p></div>
+<div class="paragraph"><p>We&#8217;re only concerned with variables with a finite domain, the <strong>finite domain</strong> of the name. For our purposes that means we want to reason about domains that are sets of integers.</p></div>
+<div class="paragraph"><p>You <em>do need</em> to give variables a domain before you try to label them! If not, you&#8217;ll get a baffling <code>ERROR: Arguments are not sufficiently instantiated</code> exception.</p></div>
+<div class="paragraph"><p>Any finite list of possibilites can be mapped into a finite subset of the integers.</p></div>
+<div class="paragraph"><p>At first this can seem awkward, but it&#8217;s really no different than using array indices. A bigger issue can be debugging - lists of integers can be pretty meaningless. Writing some debug code to extract the data and print it can help.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_example">4. An Example</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>I&#8217;m always annoyed by discussions that blather on, ungrounded in reality. So here&#8217;s a classic constraint program, with brief descriptions of the parts. You may not understand all the parts yet.</p></div>
+<div class="paragraph"><p>The SEND + MORE = MONEY cryptoarithmetic puzzle is a classic
+"hello world" for constraint programming. The puzzle is
+to assign the digits 0 thru 9 to letters such that they
+spell out SEND MORE MONEY and when read as base 10 numbers
+create a true mathematical formula. Leading zeros are not
+permitted on numbers.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).         <img src="./images/icons/callouts/1.png" alt="1" />
+
+puzzle([S,E,N,D] + [M,O,R,E] = [M,O,N,E,Y]) :-   <img src="./images/icons/callouts/2.png" alt="2" />
+        Vars = [S,E,N,D,M,O,R,Y],     <img src="./images/icons/callouts/3.png" alt="3" />
+        Vars ins 0..9,      <img src="./images/icons/callouts/4.png" alt="4" />
+        all_different(Vars),        <img src="./images/icons/callouts/5.png" alt="5" />
+                  S*1000 + E*100 + N*10 + D +     <img src="./images/icons/callouts/6.png" alt="6" />
+                  M*1000 + O*100 + R*10 + E #=
+        M*10000 + O*1000 + N*100 + E*10 + Y,
+        M #\= 0, S #\= 0,    <img src="./images/icons/callouts/7.png" alt="7" />
+                label(Vars).  <img src="./images/icons/callouts/8.png" alt="8" />
+
+9 ?- puzzle(X).
+X = ([9, 5, 6, 7]+[1, 0, 8, 5]=[1, 0, 6, 5, 2]) ;  <img src="./images/icons/callouts/9.png" alt="9" />
+false.</code></pre>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="./images/icons/callouts/1.png" alt="1" /></td><td>
+include the clp(fd) library
+</td></tr>
+<tr><td><img src="./images/icons/callouts/2.png" alt="2" /></td><td>
+note the clp(fd) is not an embedded DSL like pce or quasiquotes. clp(fd) <em>rides along</em> with Prolog, adding semantics.
+</td></tr>
+<tr><td><img src="./images/icons/callouts/3.png" alt="3" /></td><td>
+for convenience make a list of all the variables we&#8217;ll constrain
+</td></tr>
+<tr><td><img src="./images/icons/callouts/4.png" alt="4" /></td><td>
+restrict each variable in Vars to the range 0..9 inclusive
+</td></tr>
+<tr><td><img src="./images/icons/callouts/5.png" alt="5" /></td><td>
+add the constraint that they must all be different
+</td></tr>
+<tr><td><img src="./images/icons/callouts/6.png" alt="6" /></td><td>
+add the arithmetic constraint that defines the puzzle
+</td></tr>
+<tr><td><img src="./images/icons/callouts/7.png" alt="7" /></td><td>
+M and S start words, and hence cannot be zero
+</td></tr>
+<tr><td><img src="./images/icons/callouts/8.png" alt="8" /></td><td>
+attempt to ground as many variables as possible.
+</td></tr>
+<tr><td><img src="./images/icons/callouts/9.png" alt="9" /></td><td>
+notice that there&#8217;s no funny attribution outside, it just returns the solution
+</td></tr>
+</table></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">FortyTenTen Exercise</div>
+<div class="paragraph"><p>1) Solve the cryptarithm
+FORTY + TEN + TEN = SIXTY
+by modifying the program</p></div>
+<div class="paragraph"><p>2) are there more solutions to SEND+MORE=MONEY if you allow leading zeros? Modify the program to find out.</p></div>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_labeling">5. Labeling</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Attaching constraints is nice, but ultimately of little use until we can get back to simply grounding the variables. A solution with all the variables ground is called a <em>ground solution</em>.</p></div>
+<div class="paragraph"><p>There are a few minor mechanisms for doing so. If you reduce the domain to a single value, the variable will be ground.</p></div>
+<div class="paragraph"><p>Obviously you can simply ground the variable normally <code>X = 3</code></p></div>
+<div class="paragraph"><p>And the predicate <code>indomain/1</code> successively binds a single variable to it&#8217;s possible values on backtracking.</p></div>
+<div class="paragraph"><p>But usually we call <code>label/1</code> or <code>labeling/2</code> to find a single ground solution. <code>label/1</code> and <code>labeling/2</code> are multimodal, binding a different set of values on each backtracking.</p></div>
+<div class="paragraph"><p>Of course our constraint system may not be powerful enough to express every constraint. If so, we must fall back on the generate and test search strategy familiar to all Prolog programmers. With constraint systems, generate and test becomes</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+constrain
+</p>
+</li>
+<li>
+<p>
+generate (by labeling)
+</p>
+</li>
+<li>
+<p>
+test
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>and indeed most clp(fd) programs follow a general pattern of constrain followed by label.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">It&#8217;s a good practice to set up the model and do the labeling and any remaining searching in separate predicates. This makes it easier to inspect the model before labeling is applied.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p><code>labeling/2</code> has a wealth of options that affect the variable selection strategy. Since most of the time taken by a clp(fd) program is usually in the labeling, we&#8217;ll cover these in detail later. For now we&#8217;ll use <code>label/1</code>, which has reasonable defaults.</p></div>
+<div class="paragraph"><p>The options in <code>labeling/2</code> are also used with optimization problems of the <em>make the most profit</em> type.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_constraints">6. Simple Constraints</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>clp(fd) provides a basic set of primitive constraints.</p></div>
+<div class="paragraph"><p>Remember that clp(fd) works with integers.</p></div>
+<div class="listingblock">
+<div class="title">simple operators</div>
+<div class="content">
+<pre><code>X #&gt;= Y
+X #=&lt; Y
+X #= Y
+X #\= Y
+X #&gt; Y
+X #&lt; Y</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">You can use <code>#=</code> as a declarative version of <code>is</code>, in what is otherwise not a clp(fd) program. <code>X is 3+Y</code> requires Y to be ground, while <code>X #= 3+Y</code> works if X is ground and Y is not.</td>
+</tr></table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content"><code>X #&lt; Y</code> is useful to get rid of uninteresting symmetries. For example, if players 1 and 3 are matched in a tournament then there&#8217;s no point considering the match 3 and 1. Consider this example taken from the SWI-Prolog documentation that finds all the ways to pair up 4 people:</td>
+</tr></table>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Removing Symmetry</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>?- Vs = [A,B,C,D], Vs ins 1..4,
+        all_different(Vs),
+        A #&lt; B, C #&lt; D, A #&lt; C,
+   findall(pair(A,B)-pair(C,D), label(Vs), Ms).
+Ms = [ pair(1, 2)-pair(3, 4),
+       pair(1, 3)-pair(2, 4),
+       pair(1, 4)-pair(2, 3)].</code></pre>
+</div></div>
+</div></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Strictly Increasing Exercise</div>
+<div class="paragraph"><p>Write a predicate <code>increase/1</code> that takes a list and constrains it to be strictly increasing.</p></div>
+<div class="paragraph"><p>First record what result you expect from each query below. Then test that your predicate does what you expect.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>?- increase([1, X, 3]).
+
+?- increase([1, X, 4]).
+
+?- increase([1,X, Y, 4]).
+
+?- increase([1,2]).
+
+?- increase([1,X]).</code></pre>
+</div></div>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_constraining_to_a_domain">7. Constraining to a Domain</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Clp(fd) is concerned with the domains of variables. You can restrict the domains of variables with the <code>in</code> and <code>ins</code> operators.</p></div>
+<div class="paragraph"><p>Both <code>in</code> and <code>ins</code> take a domain on the right side.
+A domain is a simple range or a union of simple ranges with the
+\/ operator</p></div>
+<div class="listingblock">
+<div class="title">Unions</div>
+<div class="content">
+<pre><code>1..3 \/ 5..7</code></pre>
+</div></div>
+<div class="paragraph"><p>A simple domain can be a single integer or a pair of bounds connected with double dots. The bounds can be integers, or <code>inf</code> for the least member or <code>sup</code> for the greatest member. Any of these can be a ground variable.</p></div>
+<div class="exampleblock">
+<div class="title">Example 2. Complex Domain</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>V in inf.. -2 \/ 0 \/ 2..16 \/ 18..sup</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p><code>in</code> constrains a single variable.</p></div>
+<div class="paragraph"><p><code>ins</code> constrains a list of variables to the same values, the equivilent of maplist over the list with in.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">What if your domain data comes from input data? Assemble your domain as a term and use X in MyDomain. Here&#8217;s an example</td>
+</tr></table>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. A Domain From Data</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>% Bases is a list of ints. Constrain Var to be within B..B+2 for B
+% a member of Bases
+
+two_domains(Bases, Var) :-
+        make_two_domains(Bases, Term),
+        Var in Term.
+
+make_two_domains([H], H..HT) :-
+        HT is H + 2.
+make_two_domains([H | T], '\\/'(H .. HT, TDomain)) :-
+        HT is H + 2,
+        make_two_domains(T, TDomain).
+
+25 ?- two_domains([1, 8, 16], V).
+ V in 1..3\/8..10\/16..18 ;</code></pre>
+</div></div>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_arithmetic_operators">8. Arithmetic Operators</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>constraints can take infix arithmetic expressions.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>X + 2 #= Y * 3</code></pre>
+</div></div>
+<div class="paragraph"><p>The available operators are</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+unary -,
+</p>
+</li>
+<li>
+<p>
++,
+</p>
+</li>
+<li>
+<p>
+-,
+</p>
+</li>
+<li>
+<p>
+*,
+</p>
+</li>
+<li>
+<p>
+/ (truncated integer division),
+</p>
+</li>
+<li>
+<p>
+^ (exponentiation),
+</p>
+</li>
+<li>
+<p>
+min,
+</p>
+</li>
+<li>
+<p>
+max,
+</p>
+</li>
+<li>
+<p>
+mod,
+</p>
+</li>
+<li>
+<p>
+rem,
+</p>
+</li>
+<li>
+<p>
+abs
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_logical_operators">9. Logical Operators</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_code_code_code_code_negation">9.1. <code><code>#\</code></code> Negation</h3>
+<div class="paragraph"><p>Unary. Inverts the contained constraint.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_code_code_code_code_and">9.2. <code><code>#/\</code></code> And</h3>
+<div class="paragraph"><p>Constrains both sides to hold. Useful on left side of a <code><code>#==&gt;</code></code> operator (below).</p></div>
+</div>
+<div class="sect2">
+<h3 id="_code_code_code_code_or">9.3. <code><code>#\/</code></code> Or</h3>
+<div class="paragraph"><p>Constrains at least one side to hold. Useful on left side of a <code><code>#==&gt;</code></code> operator (below).</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reification">10. Reification</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Reification is the process of using constraints to control other constraints. clp(fd) includes two operators for reification.</p></div>
+<div class="sect2">
+<h3 id="_code_code_lt_gt_code_code_equivalency">10.1. <code><code>#&lt;==&gt;</code></code> Equivalency</h3>
+<div class="paragraph"><p>Each side may be a boolean variable (a 0 or 1) or a constraint. The constraints are modified so they both hold, or their negations both hold.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_code_code_gt_code_code_implication">10.2. <code><code>#==&gt;</code></code> Implication</h3>
+<div class="paragraph"><p>If the left side holds, then the right side must hold.
+If the left side does not hold, then the right side is ignored.</p></div>
+<div class="exampleblock">
+<div class="title">Example 4. Some Reified Constraints</div>
+<div class="content">
+<div class="paragraph"><p>In a chemical plant there is a reaction vessel. The
+temperature in the vessel is constrained to be less
+than a certain value, and to be more than another value,
+except when in <em>startup</em> mode.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>chem_tank(Temp, Startup) :-
+        Temp #&lt; 800,
+        #\+ Startup #==&gt; Temp #&gt; 300.</code></pre>
+</div></div>
+<div class="paragraph"><p>We can define startup mode as lasting for 10 minutes after
+some StartTime.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>chem_demo(Temp, TimeNow, StartTime) :-
+        chem_tank(Temp, TimeNow - StartTime #&lt; 10).</code></pre>
+</div></div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commonly_useful_constraints">11. Commonly Useful Constraints</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>We now turn to looking at the more <em>convenience</em> predicates provided in the clp(fd) library. Most establish a large number of simple constraints at the same time.</p></div>
+<div class="paragraph"><p>As well as introducing the convenience predicates, it&#8217;s also a good way to develop a facility with using constraints.</p></div>
+<div class="paragraph"><p>Here are a few constraints that are useful in a wide variety of constraint situations.</p></div>
+<div class="sect2">
+<h3 id="_length_list_length">11.1. length(List, Length)</h3>
+<div class="paragraph"><p>This of course is good ol' length. It&#8217;s useful in the length(-, +) mode
+to generate a list of unbound variables.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content"><code>length_(Length, List) :- length(List, Length).</code> is sometimes handy to make lists of unbound variables in call + 1 situations.
+<code>length(List, 9), maplist(length_(9), List)</code> gives a 2D array of
+unbound variables, for example.</td>
+</tr></table>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">length Exercise</div>
+<div class="paragraph"><p>query</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>?- length(X, 5).</code></pre>
+</div></div>
+<div class="paragraph"><p>Now try</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>?- length(X, Y).</code></pre>
+</div></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_all_different_list">11.2. all_different(List)</h3>
+<div class="paragraph"><p>This predicate is used frequently. It constrains the members of List to
+different values.</p></div>
+<div class="listingblock">
+<div class="title">all_different Example</div>
+<div class="content">
+<pre><code> ?- length(List, 4),List ins 1..4, all_different(List), List = [1,_,3,4].
+List = [1, 2, 3, 4].</code></pre>
+</div></div>
+<div class="paragraph"><p><code>all_different/1</code> is useful in conjunction with the <em>pigeonhole principle</em>, which says that if you have N variables each an element of 1..M , and N &gt; M, then there must be two variables with the same value. In the above example, List must always be a permutation of [1, 2, 3, 4] for this reason.</p></div>
+<div class="paragraph"><p>All_distinct works like all_different, but <em>tries harder</em> to detect when all are different.</p></div>
+<div class="paragraph"><p>For example,</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>24 ?- X in 1..2, Y in 1..2, Z in 1..2, all_different([X,Y,Z]).
+X in 1..2,
+all_different([X, Y, Z]),
+Y in 1..2,
+Z in 1..2.
+
+25 ?- X in 1..2, Y in 1..2, Z in 1..2, all_distinct([X,Y,Z]).
+false.
+
+26 ?-</code></pre>
+</div></div>
+<div class="paragraph"><p>In the above, all_different fails to detect that there are only two possible values for X, Y, and Z, so two of them must be the same.</p></div>
+<div class="paragraph"><p>all_distinct does more work to analyze the domains of it&#8217;s variables, and does detect this condition. The cpu cost of using all_distinct is higher, however - so this needs balanced against performance gains from pruning the search tree earlier.</p></div>
+<div class="paragraph"><p>If you are having performance issues it might be worth investigating using one or the other.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_tuples_in_listofvariabletuples_listofacceptedtuples">11.3. tuples_in(+ListOfVariableTuples, +ListOfAcceptedTuples)</h3>
+<div class="paragraph"><p>It&#8217;s fairly common to have a list of acceptable combinations of
+a few variables. A common situation would be ordering American style
+meals, where you order a full meal, whose price includes an entree and
+two sides, but you only get one side if you get the pie, etc.
+You have to enumerate all the various combinations.</p></div>
+<div class="paragraph"><p>The SWI-Prolog documentation contains this cool demo of selecting trains for a journey.</p></div>
+<div class="exampleblock">
+<div class="title">Example 5. Train Journey</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).
+
+trains([[1,2,0,1], % from station, to station, departs at, arrives at
+        [2,3,4,5],
+        [2,3,0,1],
+        [3,4,5,6],
+        [3,4,2,3],
+        [3,4,8,9]]).
+
+threepath(A, D, Ps) :-
+        Ps = [[A,B,_T0,T1],[B,C,T2,T3],[C,D,T4,_T5]],
+        T2 #&gt; T1,
+        T4 #&gt; T3,
+        trains(Ts),
+        tuples_in(Ps, Ts).
+
+?- threepath(1, 4, Ps).
+Ps = [[1, 2, 0, 1], [2, 3, 4, 5], [3, 4, 8, 9]].</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Beyond the sheer coolness of this as a path finding method,
+notice that we didn&#8217;t have to do any labeling. There&#8217;s only
+one solution.</p></div>
+<div class="paragraph"><p>If you find yourself with tuples that look like <code>[[1,2], [2,7], [3,8]&#8230;]</code> consider using <code>element/3</code> instead.</p></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">tuples_in Exercise</div>
+<div class="paragraph"><p>no 1. Modify the Train Journey program so it finds routes with any number of trains, not just 3.</p></div>
+<div class="paragraph"><p>no 2. You are asked to produce a table of employees who are eligible for promotion.
+You have this list of lists. Each inner list is a record for a single employee. The fields are employee #, last review score, # of safety violations, time in grade, required time for promotion</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>employees([
+   [1, 75, 0, 30, 25],
+   [2, 83, 0, 45, 25],
+   [3, 90, 1, 45, 50],
+   [4, 45, 3, 75, 25],
+   [5, 89, 0, 52, 50]
+   ]).</code></pre>
+</div></div>
+<div class="paragraph"><p>To be eligible for promotion an employee must have a last review score of 80 or above, no more than one safety violation, and their time in grade must be more than the required time for promotion.</p></div>
+<div class="paragraph"><p>no 3. The last column, time required for promotion, isn&#8217;t normalized. Employees are either team members or team leaders. Team members need 25 weeks in grade, team leaders need 50. The cheif architect has decided to abstract these into a second table so these numbers can be changed easily.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>employees([
+   [1, 75, 0, 30, 1],
+   [2, 83, 0, 45, 1],
+   [3, 90, 1, 45, 2],
+   [4, 45, 3, 75, 1],
+   [5, 89, 0, 52, 2]
+   ]).
+
+time_in_grade([[1,25], [2,50]]).</code></pre>
+</div></div>
+<div class="paragraph"><p>Update exercise 2 to use the new data format.</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_sudoku">11.4. Sudoku</h3>
+<div class="paragraph"><p>OK, this isn&#8217;t really the Sudoku predicate, but <code>transpose(+Matrix, ?Transpose)</code> is useful when
+the variables are naturally expressed as a 2D grid.</p></div>
+<div class="paragraph"><p>Represent the grid as a list of lists. Each list is
+one row.</p></div>
+<div class="paragraph"><p>Many constraint predicates work on adjacency of elements in a list.
+If you need to operate on rows you can just use maplist.
+To operate on columns, transpose the matrix and they&#8217;re now
+rows.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">No, you don&#8217;t need to transpose back. The new transposed matrix
+shares with the original. Any constraints on it are constraints
+on the original.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Here, for example, is a program to solve the "quarreling children" problem.
+It&#8217;s made considerably simpler by only dealing with rows</p></div>
+<div class="listingblock">
+<div class="title">Quarreling Children</div>
+<div class="content">
+<pre><code>/*
+         much shorter quarreling children
+
+         16 children are to be seated in a
+         4 x 4 array of chairs.
+
+         the children are 8 girls (numbered 1..8) and
+         8 boys (numbered 9..16).
+
+     1,3,5,8 think boys are ucky
+         9,10,11,14 think girls are gross
+
+         these pairs are enemies
+
+         [[1,2], [4,6], [4,7], [4, 9],[9,11], [12, 14], [14,16]]
+
+ */
+
+length_(Length, List) :- length(List, Length).
+
+child_row(X) :- X ins 1..16 .
+
+ww(X) :-
+        write(X),
+        write('/').
+
+print_row(Row) :-
+        maplist(ww, Row),
+        nl.
+
+children(Class) :-
+        length(Class, 4),
+        maplist(length_(4), Class),
+        maplist(child_row , Class),
+        maplist(row_compatible, Class),
+        transpose(Class, TransClass),
+        maplist(row_compatible, TransClass),
+        flatten(Class, FlatClass),
+        all_different(FlatClass),
+        maplist(label, Class),
+        maplist(print_row, Class).
+
+row_compatible([A,B,C,D]) :-
+        compatible(A, B),
+        compatible(B, C),
+        compatible(C, D).
+
+compatible(A, B) :-
+        not_enemy(A, B),
+        not_enemy(B, A),
+        sex_compatible(A, B),
+        sex_compatible(B, A).
+
+not_enemy(A, B) :-
+        NotA #\= A #\/ NotB #\= B,
+        tuples_in([[NotA, NotB]],
+                    [[1,2], [4,6], [4,7], [4, 9],[9,11], [12, 14], [14,16]]).
+
+sex_compatible(A, B) :-
+        A in 1\/3\/5\/8 #==&gt; B #=&lt; 8,
+        A in  9..11\/14 #==&gt; B #&gt; 8.</code></pre>
+</div></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">transpose Exercise</div>
+<div class="paragraph"><p>Write a predicate that will be part of a roguelike game.</p></div>
+<div class="paragraph"><p>Your game board is a 2D array (list of lists). Each square contains
+one of the following</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+0 - floor
+</p>
+</li>
+<li>
+<p>
+1 - walls
+</p>
+</li>
+<li>
+<p>
+2 - monster
+</p>
+</li>
+<li>
+<p>
+3 - the player
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>write a predicate, can_move(+Board, -Moves)
+Board will be a board as defined above
+SafeMoves will be a list of lists, with a 1 where the player can move
+and a 0 where they cannot. Enforce these rules:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The player can move 0,1,2, or 3 spaces, connected horizontally and vertically, not diagonally.
+</p>
+</li>
+<li>
+<p>
+The player cannot pass through or end on walls
+</p>
+</li>
+<li>
+<p>
+the player cannot pass through or end adjacent to monsters
+</p>
+</li>
+<li>
+<p>
+The player cannot move off the board
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Sample run (some liberties taken for readability):</p></div>
+<div class="listingblock">
+<div class="title">board Example</div>
+<div class="content">
+<pre><code>board([
+[1,1,1,1,1,1,1,1],
+[1,0,2,0,0,0,0,0],
+[0,1,0,0,0,2,0,0],
+[0,0,1,0,0,0,0,3],
+[0,0,0,1,0,0,2,0],
+[0,0,0,0,1,0,0,0],
+[0,0,0,0,0,1,0,0],
+[0,0,0,0,0,0,1,0],
+[0,0,0,0,0,0,0,1]
+]).
+
+?- board(B), can_move(B, M), writeq(M).
+M = [
+[0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,1,1],
+[0,0,0,0,0,0,0,1],
+[0,0,0,0,0,0,0,1],
+[0,0,0,0,0,0,2,0],
+[0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0]
+]</code></pre>
+</div></div>
+<div class="paragraph"><p>Hint: write a predicate to print out M in a more readable format
+Extra credit: use the terminal coloring library to make that fancy</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_zcompare_order_a_b">11.5. zcompare(?Order, ?A, ?B)</h3>
+<div class="paragraph"><p>zcompare is useful when you need to know the relationship between the domains of two unlabeled variables.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>10 ?- X in 0..10, Y in 11..20,zcompare(C, X, Y).
+C = (&lt;),
+X in 0..10,
+Y in 11..20.
+
+11 ?- X in 0..11, Y in 11..20,zcompare(C, X, Y).
+X in 0..11,
+zcompare(C, X, Y),
+freeze(C, clpfd:zcompare_(C, X, Y)),
+Y in 11..20.</code></pre>
+</div></div>
+<div class="paragraph"><p>I&#8217;ll admit, that second one puzzled me a bit. C, it turns out, is still unbound, since we can&#8217;t really tell the relationship between X and Y when their domains overlap. But if C becomes bound later, then it will go back and constrain X and Y!</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>15 ?- X in 0..11, Y in 11..20,zcompare(C, X, Y),C = &lt;, writeln(C).
+&lt;
+C = (&lt;),
+X in 0..11,
+X#=&lt;Y+ -1,
+zcompare(&lt;, X, Y),
+Y in 11..20.</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Annie is here, looking like this =8cO trying to imagine debugging code that uses lots of zcompares</td>
+</tr></table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_resources">12. Resources</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>clp(fd) is great with resource constrained problems.</p></div>
+<div class="paragraph"><p>Scheduling problems are often a repeated series of resource constraint problems.</p></div>
+<div class="paragraph"><p>Most such problems can be worked with the primitive constraints, but a couple built in clp(fd) constraints are useful.
+<code>sum/3</code> and <code>scalar_product/4</code> are fairly straightforward.</p></div>
+<div class="paragraph"><p>The use of <code>scalar_product/4</code> might not be obvious. It&#8217;s useful for defining relationships where different things have different <em>costs</em> (in time, money, or something else).</p></div>
+<div class="listingblock">
+<div class="title">Penny Candy</div>
+<div class="content">
+<pre><code>%
+%  penny candy example
+%  Timmy has 25 cents
+%  gumballs cost a penny
+%  snickers cost 10 cents
+%  toffees are 2 cents
+%  licorice costs 5 cents
+%
+%  what are Timmys alternatives?
+%  assume Timmy spends the entire 25 cents
+scalar_test(Candy) :-
+        Candy = [_Gumball, _Snickers, _Toffee, _Licorice],
+        Candy ins 0..sup,
+        scalar_product([1, 10, 2, 5], Candy, #=, 25),
+        label(Candy).
+
+6 ?- scalar_test([Gumball, Snickers, Toffee, Licorice]).
+Gumball = Snickers, Snickers = Toffee, Toffee = 0,
+Licorice = 5 ;
+Gumball = Snickers, Snickers = 0,
+Toffee = 5,
+Licorice = 3 ;
+Gumball = Snickers, Snickers = 0,
+Toffee = 10,
+Licorice = 1 ;
+Gumball = Toffee, Toffee = 0,
+Snickers = 1,
+Licorice = 3 ;
+Gumball = 0,
+Snickers = Licorice, Licorice = 1,
+Toffee = 5 ;
+...</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Try the penny candy example without the <code>Candy ins 0..sup</code> line.
+What will happen?</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sequences">13. Sequences</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>We often need things to be in a specific sequence.</p></div>
+<div class="paragraph"><p>These constraints help establish sequences.</p></div>
+<div class="sect2">
+<h3 id="_chain_list_relation">13.1. chain(+List, +Relation)</h3>
+<div class="paragraph"><p>Chain establishes the Relation constraint between each
+pair of adjacent elements in List.</p></div>
+<div class="listingblock">
+<div class="title">Chain Example</div>
+<div class="content">
+<pre><code>chain_example([A,B,C,D]) :-
+        chain([A,B,C,D], #&gt;=).
+
+?- chain_example(X).
+X = [_G4676, _G4679, _G4682, _G4685],
+_G4676#&gt;=_G4679,
+_G4679#&gt;=_G4682,
+_G4682#&gt;=_G4685.</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_lex_chain_lists">13.2. lex_chain(+Lists)</h3>
+<div class="paragraph"><p><code>lex_chain/1</code> is more interesting.  It takes a list of lists.</p></div>
+<div class="paragraph"><p>It constrains the inner lists to be <em>lexicographically non-decreasing</em>.
+This means they should be sorted by columns starting on the left. This is the normal way we sort text</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>andy
+babble &lt;-- below andy because a is less than b
+beef   &lt;-- below babble because a is less than e
+been   &lt;-- below beef because f is less than n</code></pre>
+</div></div>
+<div class="paragraph"><p>Besides the obvious use of sorting text, lex_chain has other sorting uses.</p></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">SWI-Version Exercise</div>
+<div class="paragraph"><p>Patients in a hospital have a coded set of information as a term.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>patient(ID, Name, YearAdmitted, MonthAdmitted, DayAdmitted, HourAdmitted, MinuteAdmitted, Status, Payment)</code></pre>
+</div></div>
+<div class="paragraph"><p>Status is either 0 (normal) or 1 (emergency).</p></div>
+<div class="paragraph"><p>Payment is either 0 (private), 1 (insurance), or 2 (medicaid).</p></div>
+<div class="paragraph"><p>here&#8217;s some patients</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>patient(1, 'Bob Jones', 2014, 10, 1, 4, 55, 0, 2).
+patient(2, 'Sally Smith', 2014, 9, 29, 5, 15, 1, 0).
+patient(3, 'Ted Overton', 2014, 9, 30, 14, 15, 0, 0).
+patient(4, 'Arnold Abouja', 2014, 10, 1, 5, 0, 0, 0).
+patient(5, 'Seth Humbolt', 2014, 10, 1, 5, 10, 0, 0).</code></pre>
+</div></div>
+<div class="paragraph"><p>constrain the patients to be seen acording to these rules:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+See all emergency cases first, before any normal cases.
+</p>
+</li>
+<li>
+<p>
+Within a group, see the case that arrived earliest, except
+</p>
+</li>
+<li>
+<p>
+If a private or insurance patient arrived up to an hour after a medicaid patient, see them first.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Hint: use lex_chain</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_element_index_list_element">13.3. element(?Index, +List, ?Element)</h3>
+<div class="paragraph"><p>Element is the constraint equivilent of <code>nth1/3</code> .</p></div>
+<div class="paragraph"><p>It constrains an element of a list by it&#8217;s location in the list. Element must be the Indexth member of List, counting from 1.</p></div>
+<div class="exampleblock">
+<div class="title">Example 6. Suzy Flirting Example</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>%
+% Suzy wants to flirt with Nathan
+% But not when her old boyfriend John is around
+%
+% Suzy, Nathan, and John all must take classes 1..6
+%
+% How can Suzy arrange her schedule so she can flirt
+% in at least 3 classes?
+
+flirt_constraint(Suzy, Nathan, John, FlirtPeriods) :-
+        length(Suzy, 6),
+        length(Nathan, 6),
+        length(John, 6),
+        Suzy ins 1..6,
+        Nathan ins 1..6,
+        John ins 1..6,
+        all_different(Suzy),
+        all_different(Nathan),
+        all_different(John),
+        FlirtPeriods = [A,B,C],
+        FlirtPeriods ins 1..6,
+        A #&lt; B,    % remove unwanted symmetry
+        B #&lt; C,
+        flirty_period(A, Suzy, Nathan, John),
+        flirty_period(B, Suzy, Nathan, John),
+        flirty_period(C, Suzy, Nathan, John),
+        label(Suzy),
+        label(FlirtPeriods).
+
+flirty_period(Period, Suzy, Nathan, John) :-
+        Class in 1..6,
+        DiffClass #\= Class,
+        element(Period, Suzy, Class),
+        element(Period, Nathan, Class),
+        element(Period, John, DiffClass).</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>A very important use of element is in helping to constrain different facts.</p></div>
+<div class="paragraph"><p>For example, suppose we have a group of people, and we&#8217;ve numbered them by the alphabetic order of their names. Now we want to constrain a pair to be likely romantic partners. Being heterosexist and ageist, lets say we want to constrain them to be of opposite sexes and within 10 years difference in age.</p></div>
+<div class="paragraph"><p>This example also shows getting from index numbers to what we finally want - the names. It violates a rule of style for clp(fd) - set up your model in one predicate, label it in another - for pedagogic reasons.</p></div>
+<div class="exampleblock">
+<div class="title">Example 7. Romantic Partners</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).
+
+names([amy,bill,charley,deanna,eric,frieda,george,harley]).
+% women are 1, men are 0
+genders([1,0,0,1,0,1,0,0]).
+ages([22,19,73,65,40,38,25,27]).
+
+% maps compatible names
+romance(A, B) :-
+    names(Names),
+    length(Names, NameLength),
+    AIndex in 1..NameLength,
+    BIndex in 1..NameLength,
+    genders(G),
+    element(AIndex, G, AG),
+    element(BIndex, G, BG),
+    AG #\= BG,
+    ages(Ages),
+    element(AIndex, Ages, AAge),
+    element(BIndex, Ages, BAge),
+    AAge #&lt; BAge #==&gt; AAge + 10 #&gt;= BAge,
+    AAge #&gt;= BAge #==&gt; BAge + 10 #&gt;= AAge,
+    AIndex #&lt; BIndex, % remove unwanted symmetry and reflexiveness
+    label([AIndex, BIndex]),
+    nth1(AIndex, Names, A),
+    nth1(BIndex, Names, B).
+
+
+7 ?- romance(A,B).
+A = amy,
+B = bill ;
+A = amy,
+B = george ;
+A = amy,
+B = harley ;
+A = charley,
+B = deanna ;
+A = eric,
+B = frieda ;
+false.</code></pre>
+</div></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_circuit_list">13.4. circuit(+List)</h3>
+<div class="paragraph"><p>The documentation for this is more confusing than enlightening.</p></div>
+<div class="paragraph"><p><code>circuit/1</code> takes a list of variables and constrains them to form a <em>circuit</em> - a sequence where each number after the first is Vn+1 = Vn mod L + 1 . Where Vn is an element, Vn+1 is the next element, and L is the length of the list.</p></div>
+<div class="paragraph"><p>So this is <em>clock arithmetic</em>.</p></div>
+<div class="listingblock">
+<div class="title">circuit example</div>
+<div class="content">
+<pre><code>?- length(Vs, _), circuit(Vs), label(Vs).
+Vs = [] ;
+Vs = [1] ;
+Vs = [2, 1] ;
+Vs = [2, 3, 1] ;
+Vs = [3, 1, 2] ;
+Vs = [2, 3, 4, 1] .</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_automaton">13.5. automaton</h3>
+<div class="paragraph"><p>Automaton is the 900 lb gorilla of sequencing.</p></div>
+<div class="paragraph"><p>Automaton comes from <em>automata theory</em> , the study of abstract machines. <code>automaton/3</code> constrains it&#8217;s first argument to be an element of a language that can be recognized by a finite acceptor. <code>automaton/8</code> constrains it&#8217;s first argument to be an element of a language that can be recognized by a pushdown acceptor.</p></div>
+<div class="paragraph"><p>Do what? (Mathematicians avert your eyes, I&#8217;m going to explain finite automata while playing fast and loose).</p></div>
+<div class="paragraph"><p>A finite automaton is a bit like a hopscotch game. You have a (finite) set of <em>states</em> and directional arcs between them. Each arc is associated with an input. Here&#8217;s a typical automaton.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/automatona.png" alt="A Typical Automaton" />
+</div>
+</div>
+<div class="paragraph"><p>Start on the green state. Read the first element in the sequence, and if there&#8217;s an arc labeled with it, go to that state. If not,  your sequence is not in the language. If there is, repeat in the new state - read the next element, and try to follow the arc. If you are in a blue state what you&#8217;ve read so far is part of the language.</p></div>
+<div class="paragraph"><p>Our language accepts one or more 0&#8217;s, followed by a 1, then a 2.</p></div>
+<div class="paragraph"><p>The green states are called source states, the blue ones sink states. A state could be both a sink and a source.</p></div>
+<div class="paragraph"><p>And here&#8217;s how to encode it in SWI-Prolog:</p></div>
+<div class="exampleblock">
+<div class="title">Example 8. singlesourceautomaton</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>single_source_automaton(Vs) :-
+        automaton(Vs, [source(a), sink(d)],
+                  [arc(a,0,b),
+                   arc(b,0,b),
+                   arc(b,1,c),
+                   arc(c,2,d)
+                   ]).
+
+demo_single_source(Vs) :-
+        length(Vs, 4),
+        single_source_automaton(Vs),
+        label(Vs).</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Here&#8217;s a variation on our first automaton that accpets the same as the first automaton, but allows you to add 10 to all the numbers, so it accepts sequences like 10,10,10,10,11,12.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/automaton.png" alt="Variation that also accepts sequences with each 10+ first" />
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 9. multisourceautomaton</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>multi_source_automaton(Vs) :-
+        automaton(Vs, [source(a),source(e), sink(d), sink(h)],
+                  [arc(a,0,b),
+                   arc(b,0,b),
+                   arc(b,1,c),
+                   arc(c,2,d),
+                   arc(e,10,f),
+                   arc(f,10,f),
+                   arc(f,11,g),
+                   arc(g,12,h)]).
+
+demo_len(Vs) :-
+        length(Vs, 4),
+        multi_source_automaton(Vs),
+        label(Vs).</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>automaton/3 example - certain employees can&#8217;t work at night, others on weekends, we encode this with an automaton that reads a list of who&#8217;se on shift.
+Maybe enough with the employee examples - how about valid messages?</p></div>
+<div class="paragraph"><p>Automaton/8  - on hold til I understand it</p></div>
+<div class="paragraph"><p>example for counters - extend the employee example so employees get a max and min number of shifts</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scheduling">14. Scheduling</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Scheduling is something we do every day. Bob can only meet from 2 to 3, you need a couple uninterrupted hours to think about the data base, mom&#8217;s coming by for lunch. It&#8217;s also a major economic constraint - the factory can make tractor parts from march to july but has to convert to making beanie babies for christmas.</p></div>
+<div class="sect2">
+<h3 id="_serialized">14.1. serialized</h3>
+<div class="paragraph"><p>Serialized expresses the common constraint of not being in two places at once. It takes two lists of the same length, the first is start times and the second durations. It constrains them that intervals defined by the starts and durations don&#8217;t overlap. Notice that the starts don&#8217;t have to be in order - that is, serialized([4,0,2], [1,1,1]) succeeds.</p></div>
+<div class="exampleblock">
+<div class="title">Example 10. dailyschedule</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(pairs)).
+
+my_schedule_today(Starts, Durations) :-
+  % unordered list of stuff to do today
+  % in a real problem we'd probably use minutes, these are hours in 24 hour format
+    Starts = [PrepForSmith, MeetWithSmith, _WriteDBInstaller, Lunch, _CallAlice, _ReadDocs],
+  % and how long they'll take
+    Durations = [2, 1, 2, 1, 1, 1],
+  % make all of them start in 9am to 5pm
+    Starts ins 9..17,
+  % and make sure lunch happens at noon or 1pm
+    Lunch in 12 \/ 13,
+  % Meeting with Smith is planned for 1pm
+    MeetWithSmith #= 13,
+  % have to do the prep before the meeting
+        PrepForSmith #&lt; MeetWithSmith,
+  % enforce being serialized
+    serialized(Starts, Durations).
+
+demo_my_schedule(Starts, Durations) :-
+        my_schedule_today(Starts, Durations),
+        append(Starts, Durations, Vars),
+        label(Vars),
+        pairs_keys_values(NameDurs ,
+       ['Prep for Smith', 'Meet With Smith', 'Write DB Installer', 'Lunch', 'Call Alice', 'Read Flubbercalc Docs'], Durations),
+        pairs_keys_values(Pairs, Starts, NameDurs),
+        keysort(Pairs, Sorted),
+        pairs_keys_values(Sorted, SortStarts, SortNameDurs),
+        print_sched(SortStarts, SortNameDurs).
+
+print_sched([], _).
+print_sched([Start | ST], [Name-Duration | T]) :-
+        format('~w: ~w  (~w hr)~n', [Start, Name, Duration]),
+        print_sched(ST, T).
+
+8 ?- demo_my_schedule(Starts, Durations).
+9: Prep for Smith  (2 hr)
+11: Call Alice  (1 hr)
+12: Lunch  (1 hr)
+13: Meet With Smith  (1 hr)
+14: Write DB Installer  (2 hr)
+16: Read Flubbercalc Docs  (1 hr)
+Starts = [9, 13, 14, 12, 11, 16],
+Durations = [2, 1, 2, 1, 1, 1] ;
+9: Prep for Smith  (2 hr)
+11: Call Alice  (1 hr)
+12: Lunch  (1 hr)
+13: Meet With Smith  (1 hr)
+14: Write DB Installer  (2 hr)
+17: Read Flubbercalc Docs  (1 hr)
+Starts = [9, 13, 14, 12, 11, 17],
+Durations = [2, 1, 2, 1, 1, 1]</code></pre>
+</div></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_global_cardinality_3">14.2. global_cardinality/3</h3>
+<div class="paragraph"><p><code>global_cardinality/3</code> counts the number of occurances of each value in it&#8217;s first argument.</p></div>
+<div class="paragraph"><p>Here&#8217;s an example. Suppose we have a list of employees for the shifts in a 24/7 convenience store.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>shifts([1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,4,5,6,4,5,3]).</code></pre>
+</div></div>
+<div class="paragraph"><p>we want to find out how many shifts each employee gets.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>shifts([1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,4,5,6,4,5,3]).
+
+count_shifts(Counts) :-
+     shifts(Shifts),
+     bagof(X, between(1,6,X), Keys),
+     length(Values, 6),
+     pairs_keys_values(Counts, Keys, Values),
+     global_cardinality(Shifts, Counts, []).</code></pre>
+</div></div>
+<div class="paragraph"><p>Remember, we&#8217;re in constraint land, so this works even if you don&#8217;t know
+shifts <em>ahead of time</em></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>post_shifts(Counts) :-
+     length(UnknownShifts, 21),
+     bagof(X, between(1,6,X), Keys),
+     length(Values, 6),
+     pairs_keys_values(Counts, Keys, Values),
+     global_cardinality(UnknownShifts, Counts, []),
+     % at this point I have Counts and UnknownShifts constrained,
+     % though I don't know UnknownShifts
+     shifts(UnknownShifts). % now it's bound</code></pre>
+</div></div>
+<div class="paragraph"><p><code>global_cardinality/3</code> has two options</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>consistency(value)</code>  -  presents a <em>weaker</em> consistency. I don&#8217;t know what this is, if you find out let me know
+</p>
+</li>
+<li>
+<p>
+<code>cost(Cost, Matrix)</code> - given a matrix of values for key i in position j, constrain the total cost to Cost
+</p>
+</li>
+</ul></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">global_cardinality Exercise</div>
+<div class="paragraph"><p>Design an exercise that covers the <code>cost/2</code> option of global_cardinality. Include a solution.</p></div>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_code_cumulative_2_code_and_code_cumulative_1_code">14.3. <code>cumulative/2</code> and <code>cumulative/1</code></h3>
+<div class="paragraph"><p><code>cumulative/2</code> takes a list of <em>tasks</em> and constrains them to not exceed a limit at any time during the tasks.</p></div>
+<div class="paragraph"><p>Tasks can be specified flexibly, by any combination of two of start, duration, and end. Each task also has an amount of resources it uses, and a task identifier.</p></div>
+<div class="paragraph"><p><code>cumulative/1</code> just defaults the limit to 1.</p></div>
+<div class="exampleblock">
+<div class="title">Example 11. mechanics</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>%
+%  We have 3 mechanics, and a number of repair jobs to do
+%  Transmission jobs take two mechanics
+%
+%  Find a set of start times for the jobs during a 10 hour day
+%
+task_names([
+    transmission, brake_job_1, brake_job_2, diagnosis_1,
+    diagnosis_2, fuel_injection]).
+
+tasks([
+    task(S1,3,_,2,1),
+    task(S2,1,_,1,2),
+    task(S3,1,_,1,3),
+    task(S4,3,_,1,4),
+    task(S5,3,_,1,5),
+    task(S6,2,_,1,6)], [S1, S2, S3, S4, S5, S6]).
+
+find_task_starts(S) :-
+        length(S, 6),
+        S ins 0..9,
+        tasks(Tasks, S),
+        cumulative(Tasks, [limit(3)]),
+        label(S).
+
+2 ?- find_task_starts(S).
+S = [0, 0, 1, 2, 3, 3] ;
+S = [0, 0, 1, 2, 3, 4] ;
+S = [0, 0, 1, 2, 3, 5] ;
+S = [0, 0, 1, 2, 3, 6] ;
+S = [0, 0, 1, 2, 3, 7] .</code></pre>
+</div></div>
+</div></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">cumulative Exercise</div>
+<div class="paragraph"><p>1) It looks like the mechanics aren&#8217;t very busy. Add a few more tasks.</p></div>
+<div class="paragraph"><p>2) Mechanic 3 only works the first 3 hours of the day. Modify the example to take this into account.</p></div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optimization">15. Optimization</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>We frequently need not only to satisfy a set of constraints, but to find the optimal solution. Problems like "Which of these products should this factory make to maximize profit?" and "Using 3 mechanics, how fast can we repair all these cars?" are optimization problems.</p></div>
+<div class="paragraph"><p><code>label/1</code> has an arity two version with a slightly different name, <code>labeling/2</code>.
+The options are the first argument. The options are important for optimization problems, and for increasing the efficiency of the labeling process.</p></div>
+<div class="paragraph"><p>The two we&#8217;re concerned with right now are <code>max/1</code> and <code>min/1</code> . Adding one of them to the options causes the solutions to be presented in order, with the variable in the leftmost max or min sorted first, then proceeding down the list.
+max terms sort decreasing order, min terms sort increasing order.</p></div>
+<div class="listingblock">
+<div class="title">inorder</div>
+<div class="content">
+<pre><code>7 ?- [X,Y] ins 1..3, labeling([max(X), min(Y)], [X,Y]).
+X = 3,
+Y = 1 ;
+X = 3,
+Y = 2 ;
+X = Y, Y = 3 ;
+X = 2,
+Y = 1 ;
+X = Y, Y = 2 ;
+X = 2,
+Y = 3 ;
+X = Y, Y = 1 ;
+X = 1,
+Y = 2 ;
+X = 1,
+Y = 3 ;
+false.</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_making_labeling_fast">16. Making Labeling Fast</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Internally, <code>labeling/2</code> attempts to assign values to variables one at a time. Each time a value is chosen, a subtree of possibilities is removed. You want to make those subtrees as large as possible.</p></div>
+<div class="sect2">
+<h3 id="_how_to_label_efficiently">16.1. How To Label Efficiently</h3>
+<div class="paragraph"><p>Start by ordering your variables for labeling. Place the variables that will reduce the search tree by the largest value first. Knowing which these are depends on knowledge of the domain, but you can accumulate data in use if necessary.</p></div>
+<div class="paragraph"><p>Often, within a variable you have latitude how to assign labels. Suppose you&#8217;re working on a medical treatment recommending system. Here&#8217;s the items:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+treat for radiation exposure
+</p>
+</li>
+<li>
+<p>
+prescribe antibiotics
+</p>
+</li>
+<li>
+<p>
+provide hyperbaric repressurization
+</p>
+</li>
+<li>
+<p>
+intubate to provide airway
+</p>
+</li>
+<li>
+<p>
+prescribe painkillers
+</p>
+</li>
+<li>
+<p>
+prescribe anti-cobra venom
+</p>
+</li>
+<li>
+<p>
+prescribe blood pressure regulators
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Common sense is that, hopefully, radiation exposure will be less common than sniffles, so we&#8217;ll be matching <em>prescribe antibiotics</em> more often than <em>treat for radiation exposure</em>.  So examining items in this order is likely to be faster:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+prescribe painkillers
+</p>
+</li>
+<li>
+<p>
+intubate to provide airway
+</p>
+</li>
+<li>
+<p>
+prescribe blood pressure regulators
+</p>
+</li>
+<li>
+<p>
+prescribe antibiotics
+</p>
+</li>
+<li>
+<p>
+provide hyperbaric repressurization
+</p>
+</li>
+<li>
+<p>
+prescribe anti-cobra venom
+</p>
+</li>
+<li>
+<p>
+treat for radiation exposure
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In Prolog this will look something like</p></div>
+<div class="listingblock">
+<div class="title">betterOrder</div>
+<div class="content">
+<pre><code>treatments([painkillers,
+                        intubate,
+                        bp_regulators,
+                        antibiotics,
+                        hyperbaric_chamber,
+                        anti_cobra_venom,
+                        radiation_exposure
+                        ]).</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_settings">16.2. settings</h3>
+<div class="paragraph"><p>There are 3 settings in the first argument of <code>labeling/2</code> ; variable selection strategy, value order, and branching strategy. Choose one value for each setting (or use the defaults).</p></div>
+<div class="paragraph"><p>At most one option of each category can be specified, and an option must not occur repeatedly.</p></div>
+<div class="paragraph"><p>To some extent, picking the best settings is a matter of experiment.</p></div>
+<div class="paragraph"><p>Parts of this section are copied from the documentation.</p></div>
+<div class="sect3">
+<h4 id="_variable_selection_strategy">16.2.1. variable selection strategy</h4>
+<div class="paragraph"><p>The variable selection strategy lets you specify which variable of Vars is labeled next and is one of:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>leftmost</code> - Label the variables in the order they occur in Vars. This is the default.
+</p>
+</li>
+<li>
+<p>
+<code>ff</code>  First fail. Label the leftmost variable with smallest domain next, in order to detect infeasibility early. This is often a good strategy when there are small domains for the subsequent variables when a first variable is chosen.
+</p>
+</li>
+<li>
+<p>
+<code>ffc</code> Of the variables with smallest domains, the leftmost one participating in most constraints is labeled next. Applying a constraint has to remove a subtree, so this can be a good strategy.
+</p>
+</li>
+<li>
+<p>
+<code>min</code>  Label the leftmost variable whose lower bound is the lowest next. note that this is <code>min/0</code>, different than <code>min/1</code>, which determines solution order and is discussed in the previous section above. This is a good tactic if you&#8217;re trying to minimize some global value that is likely to be lower if various variables are (e.g. a minimum cost solution).
+</p>
+</li>
+<li>
+<p>
+<code>max</code>  Label the leftmost variable whose upper bound is the highest next. This too is different than <code>max/1</code>.  And the advice for <code>min</code> applies to <code>max</code> when trying to maximize a global value.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_value_order">16.2.2. value order</h4>
+<div class="paragraph"><p>The value order is one of:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>up</code> Try the elements of the chosen variable&#8217;s domain in ascending order. This is the default.
+</p>
+</li>
+<li>
+<p>
+<code>down</code> Try the domain elements in descending order.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Obviously, if you&#8217;ve got an assymmetric distribution, like we demonstraed in how to label efficiently above, try elements in most common first order.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_branching_strategy">16.2.3. branching strategy</h4>
+<div class="paragraph"><p>The branching strategy is one of:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>step</code> For each variable X, a choice is made between X = V and X #\= V, where V is determined by the value ordering options. This is the default.
+</p>
+</li>
+<li>
+<p>
+<code>enum</code>  For each variable X, a choice is made between X = V_1, X = V_2 etc., for all values V_i of the domain of X. The order is determined by the value ordering options.
+</p>
+</li>
+<li>
+<p>
+<code>bisect</code> For each variable X, a choice is made between X #=&lt; M and X #&gt; M, where M is the midpoint of the domain of X. Choose this option if many variables are selections among a range of integers, a <em>value</em>, rather than one among a set of enumerated values (e.g. percentages, vs a=0, b=1, c=2)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_debugging_and_testing">17. Debugging and Testing</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Isolating the portion of the program that sets up the constraints allows you to
+see the constrained domains in the top level.</p></div>
+<div class="paragraph"><p>Here are some predicates that are useful for debugging and for interfacing clp(fd) with the rest of the Prolog environment.</p></div>
+<div class="paragraph"><p><code>fd_var(+Var)</code> True iff Var is a CLP(FD) variable.</p></div>
+<div class="paragraph"><p><code>fd_inf(+Var, -Inf)</code>  Inf is the infimum of the current domain of Var.</p></div>
+<div class="paragraph"><p><code>fd_sup(+Var, -Sup)</code> Sup is the supremum of the current domain of Var.</p></div>
+<div class="paragraph"><p><code>fd_size(+Var, -Size)</code> Determine the size of a variable&#8217;s domain. Size is the number of elements of the current domain of Var, or the atom sup if the domain is unbounded.</p></div>
+<div class="paragraph"><p><code>fd_dom(+Var, -Dom)</code>  Dom is the current domain of Var. This predicate is useful if you want to reason about domains. If you just want to display domains for debugging, use the graphic debugger or toplevel.</p></div>
+<div class="paragraph"><p><code>indomain/1</code> binds it&#8217;s argument to members of it&#8217;s domain on backtracking.</p></div>
+<div class="paragraph"><p>For example, to implement a custom labeling strategy, you may need to inspect the current domain of a finite domain variable. With the following code, you can convert a finite domain to a list of integers:</p></div>
+<div class="exampleblock">
+<div class="title">Example 12. domainAsIntegers</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>dom_integers(D, Is) :- phrase(dom_integers_(D), Is).
+
+dom_integers_(I)      --&gt; { integer(I) }, [I].
+dom_integers_(L..U)   --&gt; { numlist(L, U, Is) }, Is.
+dom_integers_(D1\/D2) --&gt; dom_integers_(D1), dom_integers_(D2).
+Example:
+
+?- X in 1..5, X #\= 4, fd_dom(X, D), dom_integers(D, Is).
+D = 1..3\/5,
+Is = [1,2,3,5],
+X in 1..3\/5.</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Consider clp(fd) for writing mocks.</p></div>
+<div class="paragraph"><p><code>call_residue_vars/2</code> calls a predicate, then reports all unresolved constraints or frozen variables. Since usually a proper program resolves all it&#8217;s variables, this is useful for finding things not resolved.</p></div>
+<div class="paragraph"><p>Beware that it may be buggy.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_applying_constraints_in_stages">18. Applying Constraints in Stages</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Being able to <em>hang on</em> to a system of of constrained variables, apply more, and then back up and remove the later constraints is useful.</p></div>
+<div class="paragraph"><p>For example, suppose you have a constraint based drawing program - the sort of program where you draw pieces, and if one is nearly aligned with the other, the program <em>'realizes</em>' you want them vertically or horizontally aligned. If you then drag one of the blocks, they all move to maintain the constraint.</p></div>
+<div class="paragraph"><p>To resolve the actual position of the blocks, you&#8217;re going to have to constrain one of them to the position it was dragged to, causing everything to constrain to single values. But now you&#8217;ve lost all your constraints!</p></div>
+<div class="paragraph"><p>There are two solutions to this. The first, backtracking, can work in many situations, but of course enforces a certain structure on the program. So this is more appropriate for situations like a mixed search-constraint strategy, where you set up some constraints, then search, adding different constraints, and backtracking if the problem becomes overconstrained.</p></div>
+<div class="paragraph"><p>The second solution is <code>copy_term/2</code> .</p></div>
+<div class="paragraph"><p><code>copy_term/2</code> copies a term (often a list of domain variables) and makes a new term with the same <em>shape</em> but with new variables. The copy includes the attributes (and hence the constraints).</p></div>
+<div class="paragraph"><p>By the same <em>shape</em>, we mean:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+atomic items match identical items
+</p>
+</li>
+<li>
+<p>
+variables match variables
+</p>
+</li>
+<li>
+<p>
+lists match lists of the same length whose items are the same shape.
+</p>
+</li>
+<li>
+<p>
+compound terms match compound terms of the same functor and arity, whose arguments are the same shape.
+</p>
+</li>
+</ul></div>
+<div class="exampleblock">
+<div class="title">Example 13. copyTerm</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>10 ?- copy_term(foo([bar, A, meep(B, [1,2])], 3), Copy).
+Copy = foo([bar, _G2450, meep(_G2456, [1, 2])], 3).</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>So what happens with constraints?</p></div>
+<div class="exampleblock">
+<div class="title">Example 14. copyTermAttributes</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>3 ?- X in 0..10, Y in 0..5, X #&lt; Y, copy_term(foo(X,Y), foo(XA, YA)), YA = 3.
+YA = 3,
+X in 0..4,
+X#=&lt;Y+ -1,
+Y in 1..5,
+XA in 0..2.</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Copying half of the constrained variables is generally not a great idea, you&#8217;ll end up with links outside your constraint system. Not strictly forbidden, but do it only deliberately, since usually you want the constraint system in a <em>stable</em> place you can come back to.</p></div>
+<div class="exampleblock">
+<div class="title">Example 15. copyTermHalfAttributes</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>5 ?- X in 0..10, Y in 0..5, X #&lt; Y, copy_term([Y], [YA]), YA = 3.
+YA = 3,
+X in 0..4,
+X#=&lt;Y+ -1,
+Y in 1..5.</code></pre>
+</div></div>
+</div></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">constrainedGraphics Exercise</div>
+<div class="paragraph"><p>Write a small graphics program, using whatever graphics environment you&#8217;re comfortable with, that draws a set of dots on the screen. If you move one of the dots to be aligned with another, vertically or horizontally, within a few pixels, then the two should be linked, and move together. Holding down shift always just moves one dot.</p></div>
+<div class="paragraph"><p>Extra Credit
+Expand your program into a small diagram editor.</p></div>
+<div class="paragraph"><p>(Note, you&#8217;re near the end of the tutorial, you might want to read to the end at the same time you&#8217;re working this problem).</p></div>
+<div class="paragraph"><p>Implement a constraint shell decision support system. This should allow the user to define constraints one at a time using some simple command language (not programming) and see the domains of variables. The user should be able to remove any of the constraints they have entered. Sample run</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>?-decision_support.
+Decision Support (type h for help)
+ds=h
+l = list all variables and constraints
+&lt;variable name&gt; in &lt;integer&gt; thru &lt;integer&gt; = define new variable
+&lt;variable name&gt; &lt;operator&gt; &lt;integer or variable name&gt; = define new constraint
+r &lt;number&gt;  = retract constraint &lt;number&gt;
+q = quit
+
+ds=a in 1 thru 10
+a in 1..10
+ds=b in 1 thru 10
+b in 1..10
+ds=a &lt; b
+#1: a &lt; b
+ds=b &lt; 5
+#2: b &lt; 5
+ds=l
+variables
+a in 1..3
+b in 1..4
+constraints
+#1: a &lt; b
+#2: b &lt; 5
+ds=r 2
+retracting #2: b &lt; 5
+ds=b &lt; 8
+#3: b &lt; 8
+ds=l
+variables
+a in 1..6
+b in 1..7
+constraints
+#1: a &lt; b
+#3: b &lt; 8
+ds=q
+?-</code></pre>
+</div></div>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_making_your_own_constraints">19. Making Your Own Constraints</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>First, you often don&#8217;t need to make a custom constraint, you need a custom convenience predicate. If you need <em>sort of near to</em>, which constrains X and Y to be N to M spaces from each other, then you can write a normal predicate that applies all the constraints. This is  what you&#8217;ve been doing all along in this tutorial.</p></div>
+<div class="exampleblock">
+<div class="title">Example 16. sortOfNearTo</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>sort_of_near_to(X, Y, N, M) :-
+        X #&gt; Y #==&gt; X - N #&gt;= Y  #/\  X - M - 1 #&lt; Y,
+        X #=&lt; Y #==&gt; Y - N #&gt;= X #/\ Y - M - 1 #&lt; X.</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>If you do actually need to write a constraint, here&#8217;s how.</p></div>
+<div class="paragraph"><p>First, you&#8217;ll need some setup</p></div>
+<div class="exampleblock">
+<div class="title">Example 17. ownConstraintSetup</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>:- use_module(library(clpfd)).
+
+:- multifile clpfd:run_propagator/2.</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>then you need to define the predicate the user uses to apply your constraint.</p></div>
+<div class="paragraph"><p>There are three steps to complete in this predicate.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Convert the constraint to an internal form, the <em>propagator</em>, by calling <code>clpfd:make_propagator/2</code>.
+</p>
+</li>
+<li>
+<p>
+Attach each variable to the propagator by calling <code>clpfd:init_propagator/2</code>
+</p>
+</li>
+<li>
+<p>
+Trigger the propagator so the initial state is set, we fail if we&#8217;re overconstrained, and the initial domain is set, using <code>clpfd:trigger_once/1</code> .
+</p>
+</li>
+</ol></div>
+<div class="exampleblock">
+<div class="title">Example 18. evenPred</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>% constrain X to be even
+even(X) :-
+        clpfd:make_propagator(even(X), Prop),  <img src="./images/icons/callouts/1.png" alt="1" />
+        clpfd:init_propagator(X, Prop),  <img src="./images/icons/callouts/2.png" alt="2" />
+        clpfd:trigger_once(Prop). <img src="./images/icons/callouts/3.png" alt="3" /></code></pre>
+</div></div>
+</div></div>
+<div class="colist arabic"><table>
+<tr><td><img src="./images/icons/callouts/1.png" alt="1" /></td><td>
+Convert the constraint into an internal form <code>Prop</code> , the <em>propagator</em> .
+</td></tr>
+<tr><td><img src="./images/icons/callouts/2.png" alt="2" /></td><td>
+Attach each variable (only X here) to the internal propagator.
+</td></tr>
+<tr><td><img src="./images/icons/callouts/3.png" alt="3" /></td><td>
+Trigger the Propagator once to add the initial state to the system.
+</td></tr>
+</table></div>
+<div class="paragraph"><p>Finally, you need to define the conditional check that&#8217;s called when the constraint is evaluated. This requires adding a clause to <code>clpfd:run_propagator/2</code> .</p></div>
+<div class="paragraph"><p>The first argument of <code>clpfd:run_propagator/2</code> must match the declaration in <code>make_propagator/2</code>.</p></div>
+<div class="paragraph"><p>The second argument is a mutable state maintained by clp(fd). It can be used to <em>kill</em> a constraint if it need no longer be triggered, if the constraint has failed or the variable is bound to a valid value, or if it&#8217;s domain is now reduced to only values that meet the constraint.</p></div>
+<div class="exampleblock">
+<div class="title">Example 19. evenCallback</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>% constrain X to be even
+clpfd:run_propagator(even(X), MState) :-
+        (   integer(X) -&gt; clpfd:kill(MState), 0 is X mod 2
+        ;   true
+        ).</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>And now we can use our new constraint.</p></div>
+<div class="exampleblock">
+<div class="title">Example 20. newconstraint</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre><code>[debug] 26 ?- even(1).
+false.
+
+[debug] 27 ?- even(2).
+true.
+
+[debug] 28 ?- even(X),X = 2.
+X = 2.
+
+[debug] 29 ?- even(X),X = 3.
+false.</code></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Notice that run_propagator is nondeterministic. It can fail (signaling that there is no solution for X). For example, even(X),X = 3.</p></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">exercise Try even</div>
+<div class="paragraph"><p>Put a spy point on <code>clpfd:run_propagator/2</code> and query even(X), X = 3.</p></div>
+<div class="paragraph"><p>How many times is run_propagator called?</p></div>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<img src="./images/icons/tip.png" alt="Tip" />
+</td>
+<td class="content">Fun fact - the Julian library uses clp(fd) extensively.</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">20. Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Remember, constraint programming is something you should consider any time you have several varaibles and need to solve for a compatible solution among all of them.</p></div>
+<div class="paragraph"><p>SWI-Prolog ships with a number of constraint libraries. If you&#8217;re truly inspired, make a tutorial similar to this one for clp(b) or clp(qr) or CHR. If you&#8217;re inspired to do this, drop me a line, as we&#8217;re trying to get a nice library of these tutorials together, with a common format so we can automate parts of the process downstream.</p></div>
+<div class="paragraph"><p>I hope you&#8217;ve enjoyed this tutorial. If you notice any mistakes, or want to suggest improvements, or just are totally stumped, email annie66us (at) yahoo_(dotcom) and let me know.</p></div>
+<div class="paragraph"><p>You can often find me as Anniepoo on ##prolog channel on freenode.net IRC.</p></div>
+<div class="paragraph"><p>Thanks to Markus Trista for the clp(fd) library. Hoot Markus!  Thanks to Alan Baljeu for helping with some confusing points. Thanks to Michael Richter for some of the software pipeline setup that produces these tutorials.</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2014-12-08 20:25:53 Pacific Standard Time
+</div>
+</div>
+</body>
+</html>
