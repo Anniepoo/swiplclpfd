@@ -97,7 +97,7 @@ Unknown as yet. When the first few people complete this tutorial I'll ask them.
 The CLP(FD) Library
 -------------------
 
-The clp(fd) library for SWI-Prolog was written by Markus Trista for his PhD thesis. clp(fd) stands for 'Constraint Logic Programming over Finite Domains'.
+The clp(fd) library for SWI-Prolog was written by Markus Triska for his PhD thesis. clp(fd) stands for 'Constraint Logic Programming over Finite Domains'.
 
 clp(fd) is one of several constraint solvers available in SWI-Prolog. The others are clp(b), clp(qr) and CHR. clp(b) handles booleans. clp(qr) handles rationals and reals. CHR approaches constraint programming differently, using rewrite rules.
 
@@ -1857,7 +1857,7 @@ I hope you've enjoyed this tutorial. If you notice any mistakes, or want to sugg
 
 You can often find me as Anniepoo on ##prolog channel on freenode.net IRC.
 
-Thanks to Markus Trista for the clp(fd) library. Hoot Markus!  Thanks to Alan Baljeu for helping with some confusing points. Thanks to Michael Richter for some of the software pipeline setup that produces these tutorials.
+Thanks to Markus Triska for the clp(fd) library. Hoot Markus!  Thanks to Alan Baljeu for helping with some confusing points. Thanks to Michael Richter for some of the software pipeline setup that produces these tutorials.
 
 
 
