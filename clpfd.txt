@@ -2,7 +2,7 @@ CLP(FD) Constraint Logic Programming over Finite Domains
 ========================================================
 Anne Ogborn <annie66us@yahoo.com>
 :Author Initials: AO
-:toc:
+:toc2:
 :icons:
 :numbered:
 :website: http://www.pathwayslms.com/swipltuts/
@@ -328,7 +328,7 @@ Obviously you can simply ground the variable normally +X = 3+
 
 And the predicate +indomain/1+ successively binds a single variable to it's possible values on backtracking.
 
-But usually we call +label/1+ or +labeling/2+ to find a single ground solution. +label/1+ and +labeling/2+ are multimodal, binding a different set of values on each backtracking.
+But usually we call +label/1+ or +labeling/2+ to find a single ground solution. +label/1+ and +labeling/2+ are nondeterministic, binding a different set of values on each backtracking.
 
 Of course our constraint system may not be powerful enough to express every constraint. If so, we must fall back on the generate and test search strategy familiar to all Prolog programmers. With constraint systems, generate and test becomes 
 
@@ -407,18 +407,44 @@ First record what result you expect from each query below. Then test that your p
 Constraining to a Domain
 ------------------------
 
-Clp(fd) is concerned with the domains of variables. You can restrict the domains of variables with the +in+ and +ins+ operators.
+Clp(fd) is concerned with the domains of variables. 
+
+The _domain_ of a variable is simply the set of values it can take on.
+
+In clp(fd) every variable must be restricted to a "finite domain" in order to reason about it.
+
+-----------
+X in 5..10,   <1>
+Y in 1..10,   <2>
+Y #> X        <3>
+-----------
+
+<1> Set a domain for X - in this case 5 through 10
+<2> Set a domain for Y - 1 through 10
+<3> Now constraint Y to be more than X.  So we can reason about Y's domain. Y must be one of the values 6,7,8,9, or 10.
+
+In and Ins
+~~~~~~~~~~
+
+You can restrict the domains of variables with the +in+ and +ins+ operators.
 
 Both +in+ and +ins+ take a domain on the right side.
 A domain is a simple range or a union of simple ranges with the
 \/ operator
+
+A simple domain can be a single integer or a pair of bounds connected with double dots. The bounds can be integers, or +inf+ for the least member or +sup+ for the greatest member. Any of these can be a ground variable, like +N=3, X in 1..N+ .
+
+The +\/+ operator 
+~~~~~~~~~~~~~~~~~
+
+Domains can be unioned together with the +\/+ operator
 
 .Unions
 --------------------
 1..3 \/ 5..7
 --------------------
 
-A simple domain can be a single integer or a pair of bounds connected with double dots. The bounds can be integers, or +inf+ for the least member or +sup+ for the greatest member. Any of these can be a ground variable.
+Here's an example of a more complex domain.
 
 .Complex Domain
 =====================
@@ -433,7 +459,9 @@ V in inf.. -2 \/ 0 \/ 2..16 \/ 18..sup
 
 +ins+ constrains a list of variables to the same values, the equivilent of maplist over the list with in.
 
-[TIP]
+Domain From Data
+~~~~~~~~~~~~~~~~
+
 What if your domain data comes from input data? Assemble your domain as a term and use X in MyDomain. Here's an example
 
 .A Domain From Data
@@ -462,7 +490,9 @@ make_two_domains([H | T], '\\/'(H .. HT, TDomain)) :-
 Arithmetic Operators
 --------------------
 
-constraints can take infix arithmetic expressions. 
+You can do a lot of constraint work with the arithmetic constraints.
+
+Constraints can take infix arithmetic expressions. 
 
 ---------------
 X + 2 #= Y * 3
@@ -881,6 +911,17 @@ Y in 11..20.
 [TIP]
 Annie is here, looking like this =8cO trying to imagine debugging code that uses lots of zcompares
 
+.zcompare Exercise
+************
+create a constraint +same_side_of_line/4+ , whose arguments are dicts of the form
+
+------------
+point{x:12.34, y:56.78}
+------------
+
+The first two arguments are points on a line, the next two are two test points. The predicate succeds if both test points are on the same side of the line, or both are on the line, the constraint holds.
+
+*************
 
 Resources
 ----------
