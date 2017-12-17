@@ -576,6 +576,8 @@ chem_demo(Temp, TimeNow, StartTime) :-
 Notice that +StartTime+ is passed in *as a constraint* . You can build a predicate
 that applies constraints and apply conditions under which they apply.
 
+==============================
+
 .Employment exercise
 ************
 Write a small system that matches people with jobs. The jobs have requirements for education level, weight they can lift, age, distance from home. Be able to record special constraints in the individual's
@@ -587,7 +589,6 @@ For this exercise you can make the (unrealistic) assumption that users know Prol
 
 *************
 
-==============================
 
 Commonly Useful Constraints
 ---------------------------
