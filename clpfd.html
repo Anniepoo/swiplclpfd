@@ -1506,7 +1506,7 @@ except when in <em>startup</em> mode.</p></div>
 <div class="content">
 <pre><code>chem_tank(Temp, Startup) :-
         Temp #&lt; 800,
-        #\+ Startup #==&gt; Temp #&gt; 300.</code></pre>
+        #\ Startup #==&gt; Temp #&gt; 300.</code></pre>
 </div></div>
 <div class="paragraph"><p>We can define startup mode as lasting for 10 minutes after
 some StartTime.</p></div>
@@ -1514,6 +1514,16 @@ some StartTime.</p></div>
 <div class="content">
 <pre><code>chem_demo(Temp, TimeNow, StartTime) :-
         chem_tank(Temp, TimeNow - StartTime #&lt; 10).</code></pre>
+</div></div>
+<div class="paragraph"><p>Notice that <code>StartTime</code> is passed in <strong>as a constraint</strong> . You can build a predicate
+that applies constraints and apply conditions under which they apply.</p></div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Employment exercise</div>
+<div class="paragraph"><p>Write a small system that matches people with jobs. The jobs have requirements for education level, weight they can lift, age, distance from home. Be able to record special constraints in the individual&#8217;s
+record - eg. Bob&#8217;s on parole and can&#8217;t work more than 20 miles from home. Sally wants a helper, but has had problems with workers hanging around when not working, she wants someone who lives more than 10 miles away.</p></div>
+<div class="paragraph"><p>People have funny situations, so try to make it general.</p></div>
+<div class="paragraph"><p>For this exercise you can make the (unrealistic) assumption that users know Prolog.</p></div>
 </div></div>
 </div></div>
 </div>
@@ -1968,7 +1978,7 @@ been   &lt;-- below beef because f is less than n</code></pre>
 <div class="paragraph"><p>Besides the obvious use of sorting text, lex_chain has other sorting uses.</p></div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title">SWI-Version Exercise</div>
+<div class="title">Hospital Patients</div>
 <div class="paragraph"><p>Patients in a hospital have a coded set of information as a term.</p></div>
 <div class="listingblock">
 <div class="content">
@@ -1994,7 +2004,7 @@ See all emergency cases first, before any normal cases.
 </li>
 <li>
 <p>
-Within a group, see the case that arrived earliest, except
+for patients with same status (emergency/normal), see patients in the order they arrived, except
 </p>
 </li>
 <li>
@@ -2493,7 +2503,8 @@ treat for radiation exposure
 <h3 id="_settings">16.2. settings</h3>
 <div class="paragraph"><p>There are 3 settings in the first argument of <code>labeling/2</code> ; variable selection strategy, value order, and branching strategy. Choose one value for each setting (or use the defaults).</p></div>
 <div class="paragraph"><p>At most one option of each category can be specified, and an option must not occur repeatedly.</p></div>
-<div class="paragraph"><p>To some extent, picking the best settings is a matter of experiment.</p></div>
+<div class="paragraph"><p>To some extent, picking the best settings is a matter of experiment. If you get desperate, there&#8217;s an undocumented <code>random_value(Seed)</code> (props to <a href="https://github.com/adbenitez">adbenitez</a> for pointing
+this out) or <code>random_variable</code> .</p></div>
 <div class="paragraph"><p>Parts of this section are copied from the documentation.</p></div>
 <div class="sect3">
 <h4 id="_variable_selection_strategy">16.2.1. variable selection strategy</h4>
@@ -2844,7 +2855,7 @@ false.</code></pre>
 <div class="sect1">
 <h2 id="_conclusion">20. Conclusion</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Remember, constraint programming is something you should consider any time you have several varaibles and need to solve for a compatible solution among all of them.</p></div>
+<div class="paragraph"><p>Remember, constraint programming is something you should consider any time you have several variables and need to solve for a compatible solution among all of them.</p></div>
 <div class="paragraph"><p>SWI-Prolog ships with a number of constraint libraries. If you&#8217;re truly inspired, make a tutorial similar to this one for clp(b) or clp(qr) or CHR. If you&#8217;re inspired to do this, drop me a line, as we&#8217;re trying to get a nice library of these tutorials together, with a common format so we can automate parts of the process downstream.</p></div>
 <div class="paragraph"><p>I hope you&#8217;ve enjoyed this tutorial. If you notice any mistakes, or want to suggest improvements, or just are totally stumped, email annie66us (at) yahoo_(dotcom) and let me know.</p></div>
 <div class="paragraph"><p>You can often find me as Anniepoo on ##prolog channel on freenode.net IRC.</p></div>
@@ -2855,7 +2866,7 @@ false.</code></pre>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-03-27 19:33:02 Pacific Daylight Time
+Last updated 2017-12-17 15:29:14 Pacific Standard Time
 </div>
 </div>
 </body>

@@ -559,7 +559,7 @@ except when in 'startup' mode.
 
 chem_tank(Temp, Startup) :-
 	Temp #< 800,
-	#\+ Startup #==> Temp #> 300.
+	#\ Startup #==> Temp #> 300.
 
 -----------------------------
 
@@ -572,6 +572,20 @@ chem_demo(Temp, TimeNow, StartTime) :-
 	chem_tank(Temp, TimeNow - StartTime #< 10).
 
 -----------------------------
+
+Notice that +StartTime+ is passed in *as a constraint* . You can build a predicate
+that applies constraints and apply conditions under which they apply.
+
+.Employment exercise
+************
+Write a small system that matches people with jobs. The jobs have requirements for education level, weight they can lift, age, distance from home. Be able to record special constraints in the individual's
+record - eg. Bob's on parole and can't work more than 20 miles from home. Sally wants a helper, but has had problems with workers hanging around when not working, she wants someone who lives more than 10 miles away.
+
+People have funny situations, so try to make it general. 
+
+For this exercise you can make the (unrealistic) assumption that users know Prolog.
+
+*************
 
 ==============================
 
@@ -1022,7 +1036,7 @@ been   <-- below beef because f is less than n
 
 Besides the obvious use of sorting text, lex_chain has other sorting uses.
 
-.SWI-Version Exercise
+.Hospital Patients
 ************
 Patients in a hospital have a coded set of information as a term.
 
@@ -1048,7 +1062,7 @@ constrain the patients to be seen acording to these rules:
 
 1. See all emergency cases first, before any normal cases.
 
-2. Within a group, see the case that arrived earliest, except 
+2. for patients with same status (emergency/normal), see patients in the order they arrived, except 
 
 3. If a private or insurance patient arrived up to an hour after a medicaid patient, see them first.
 
@@ -1525,7 +1539,8 @@ There are 3 settings in the first argument of +labeling/2+ ; variable selection 
 
 At most one option of each category can be specified, and an option must not occur repeatedly.
 
-To some extent, picking the best settings is a matter of experiment.
+To some extent, picking the best settings is a matter of experiment. If you get desperate, there's an undocumented +random_value(Seed)+ (props to https://github.com/adbenitez[adbenitez] for pointing
+this out) or +random_variable+ .
 
 Parts of this section are copied from the documentation.
 
@@ -1849,7 +1864,7 @@ Fun fact - the Julian library uses clp(fd) extensively.
 Conclusion
 -----------
 
-Remember, constraint programming is something you should consider any time you have several varaibles and need to solve for a compatible solution among all of them.
+Remember, constraint programming is something you should consider any time you have several variables and need to solve for a compatible solution among all of them.
 
 SWI-Prolog ships with a number of constraint libraries. If you're truly inspired, make a tutorial similar to this one for clp(b) or clp(qr) or CHR. If you're inspired to do this, drop me a line, as we're trying to get a nice library of these tutorials together, with a common format so we can automate parts of the process downstream.
 
