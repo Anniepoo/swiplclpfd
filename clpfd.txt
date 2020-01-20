@@ -1665,7 +1665,7 @@ By the same _shape_, we mean:
 * lists match lists of the same length whose items are the same shape.
 * compound terms match compound terms of the same functor and arity, whose arguments are the same shape.
 
-.copyTerm
+.CopyTerm
 ============
 
 --------------------------------------------------------
@@ -1677,8 +1677,8 @@ Copy = foo([bar, _G2450, meep(_G2456, [1, 2])], 3).
 
 So what happens with constraints?
 
-.copyTermAttributes
-===================
+.CopyTerm Attributes
+=======================
 
 -----------------------------------------------------------------------------
 3 ?- X in 0..10, Y in 0..5, X #< Y, copy_term(foo(X,Y), foo(XA, YA)), YA = 3.
@@ -1689,14 +1689,14 @@ Y in 1..5,
 XA in 0..2.
 -----------------------------------------------------------------------------
 
-===================
+=======================
 
 Copying half of the constrained variables is generally not a great idea, you'll end up with links outside your constraint system. Not strictly forbidden, but do it only deliberately, since usually you want the constraint system in a 'stable' place you can come back to.
 
-.copyTerm Half Attributes
-=========================
+.Copy Term Half Attributes
+====================================================================
 
--------------
+-----------------------------------------------------------------
 
 5 ?- X in 0..10, Y in 0..5, X #< Y, copy_term([Y], [YA]), YA = 3.
 YA = 3,
@@ -1704,21 +1704,24 @@ X in 0..4,
 X#=<Y+ -1,
 Y in 1..5.
 
---------------
+-----------------------------------------------------------------
 
-=========================
+====================================================================
 
 .Constrained Graphics Exercise
-********************************
+************************************************************************************************
 
-Write a small graphics program, using whatever graphics environment you're comfortable with, that draws a set of dots on the screen. If you move one of the dots to be aligned with another, vertically or horizontally, within a few pixels, then the two should be linked, and move together. Holding down shift always just moves one dot.
+Write a small graphics program, using whatever graphics environment you're comfortable with, 
+that draws a set of dots on the screen. If you move one of the dots to be aligned withanother, vertically or horizontally, within a few pixels, then the two should be linked, and move together. 
+Holding down shift always just moves one dot.
 
 Extra Credit
 Expand your program into a small diagram editor.
 
-(Note, you're near the end of the tutorial, you might want to read to the end at the same time you're working this problem).
+(Note, you're near the end of the tutorial, you might want to read to the 
+end at the same time you're working this problem).
 
-********************************
+************************************************************************************************
 
 .Constraint Shell
 ***********************************************************************************************
