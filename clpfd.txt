@@ -59,11 +59,11 @@ clp(fd) is useful for solving a wide variety of 'find values for these variables
  * Geometric constraints for graphics, eg. a CAD system, where two lines must be perpendicular, another two parallel, others 30 inches apart, and so on.
 
 .Uses of clp(fd) Exercise
-************
+*************************
 
 Make up another example for each of the categories above. Try to expand the domain of the problem as much as you can. For example, given a set of train cars, putting them in an order that makes sense and obeys some rules (e.g. no tank cars next to the engine, the caboose has to be on the back) is a sequence problem.
 
-************* 
+************************* 
 
 Prerequisites
 ~~~~~~~~~~~~~
@@ -92,14 +92,14 @@ can expect to:
 Time to Complete
 ~~~~~~~~~~~~~~~~
 
-Unknown as yet. When the first few people complete this tutorial I'll ask them.
+6-8 hours, though it varies with one's mathematical experience.
 
 The CLP(FD) Library
 -------------------
 
 The clp(fd) library for SWI-Prolog was written by Markus Triska for his PhD thesis. clp(fd) stands for 'Constraint Logic Programming over Finite Domains'.
 
-clp(fd) is one of several constraint solvers available in SWI-Prolog. The others are clp(b), clp(qr) and CHR. clp(b) handles booleans. clp(qr) handles rationals and reals. CHR approaches constraint programming differently, using rewrite rules.
+clp(fd) is one of several constraint solvers available in SWI-Prolog. There are others: clp(b), clp(qr). clp(b) handles booleans. clp(qr) handles rationals and reals. CHR is a tool for making your own constraint systems (among other things).
 
 The clp(fd) library can be activated by simply 
 
@@ -154,7 +154,7 @@ Constrained Variables
 
 But in the real world we can say more about a variable. 
 
-We might not know the exact value, but we know it is one of a set of possible values.
+We might not know the exact value, but we know it is one of a set of possible values. We call this it's _domain_.
 
 We might know it's value is, say, greater than the value of some other variable, whose value we also don't know. We say the variable is *constrained*.
 
@@ -172,7 +172,7 @@ You can infer that X is within the narrower range 5 to 10, since the lowest valu
 
 Here's how it looks in clp(fd). Don't worry if you don't understand all of this yet
 
-------------------------
+-------------------------------------------
 :- use_module(library(clpfd)).         <1>
 
 test(X, Y) :-
@@ -185,7 +185,7 @@ test(X, Y) :-
 X in 5..10,           <5>
 Y#=<X+ -1,     <6>
 Y in 4..8.
--------------------------
+-------------------------------------------
 
 <1> include the clp(fd) library
 <2> constrain X to be in 0 through 10 using the 'in' operator
@@ -196,7 +196,7 @@ Y in 4..8.
 
 When we have constrained a variable to a single value, something rather magical happens - we now know the value of the variable, so we can bind the variable. And in clp(fd) this is indeed what happens! Suppose I constrain X to the range 0 to 5, and Y to 4 to 8, and X > Y, then suddenly X is now in bound to 5. ground(X) succeeds, and X is a perfectly ordinary bound variable.
 
-------------------------
+-------------------------------
 :- use_module(library(clpfd)).
 
 test2(X, Y) :-
@@ -208,50 +208,51 @@ test2(X, Y) :-
 X = 5,     <1>
 Y = 4.     <2>
 
--------------------------
+-------------------------------
 
 <1> X is bound just like normal Prolog
 <2> Notice that Y is bound too. Further, it's lost it's original constraints
 
 .punch and run Exercise
-************
+***********************
 
 Type in and try the two examples above. Step into them with the graphic debugger to see the constraints listed.
 
-************* 
+*********************** 
 
 .backtracking Exercise
-************
+**********************
 
-------------
+------------------------------
 :- use_module(library(clpfd)).
 
 foo(X) :- X in 1..3 .
 foo(X) :- X in 5..7 .
 foo(X) :- X in 8..12 .
-------------
+------------------------------
 
 What will happen if you query foo(X) and get all the solutions by backtracking?
 Predict what will happen, and then try it. Was your prediction correct?
 
-************* 
+********************** 
 
 Implementation
 ~~~~~~~~~~~~~~
 
 SWI-Prolog has the ability to add *attributes* to variables. This is additional meta-data attached to the variable. If you're interested, you can read more about attributed variables at link:http://swi-prolog.org/pldoc/man?section=attvar[The SWI-Prolog website].
 
-clp(fd) uses this attribute data to decorate the variables with constraints. Then clp(fd) implements constraint programming
-as an expansion of the normal Prolog unification. 
+clp(fd) uses this attribute data to decorate the variables with constraints. Then clp(fd) implements constraint programming as an expansion of the normal Prolog unification. 
+
+More on this at the end of the tutorial.
 
 .attributes Exercise
-************
+*********************
 
 Extra credit -
 
 Think up another use for attributes on variables besides constraints
 
-************* 
+********************* 
 
 Domains
 ~~~~~~~
@@ -260,8 +261,7 @@ The (fd) in clp(fd) stands for 'finite domain'. This domain could have millions 
 
 We're only concerned with variables with a finite domain, the *finite domain* of the name. For our purposes that means we want to reason about domains that are sets of integers. 
 
-You _do need_ to give variables a domain before you try to label them! If not, you'll get a baffling +ERROR: Arguments are not sufficiently instantiated+ exception.
-
+`clp(fd)` works with a domain like `[air, land, sea]`, but can't optimize well. Better to map air=0, land=1, sea=2 and then say the domain is `0..2` .
 Any finite list of possibilites can be mapped into a finite subset of the integers.
 
 At first this can seem awkward, but it's really no different than using array indices. A bigger issue can be debugging - lists of integers can be pretty meaningless. Writing some debug code to extract the data and print it can help.
@@ -294,7 +294,7 @@ puzzle([S,E,N,D] + [M,O,R,E] = [M,O,N,E,Y]) :-   <2>
 9 ?- puzzle(X).
 X = ([9, 5, 6, 7]+[1, 0, 8, 5]=[1, 0, 6, 5, 2]) ;  <9>
 false.
--------------------------
+------------------------
 
 <1> include the clp(fd) library
 <2> note the clp(fd) is not an embedded DSL like pce or quasiquotes. clp(fd) 'rides along' with Prolog, adding semantics.
@@ -307,7 +307,7 @@ false.
 <9> notice that there's no funny attribution outside, it just returns the solution
 
 .FortyTenTen Exercise
-************
+**********************
 
 1) Solve the cryptarithm 
 FORTY + TEN + TEN = SIXTY
@@ -315,20 +315,22 @@ by modifying the program
 
 2) are there more solutions to SEND+MORE=MONEY if you allow leading zeros? Modify the program to find out.
 
-************* 
+********************** 
 
 Labeling
 --------
 
 Attaching constraints is nice, but ultimately of little use until we can get back to simply grounding the variables. A solution with all the variables ground is called a 'ground solution'.
 
-There are a few minor mechanisms for doing so. If you reduce the domain to a single value, the variable will be ground.
+There are a few minor mechanisms for doing so. 
 
-Obviously you can simply ground the variable normally +X = 3+
+If you reduce the domain to a single value, the variable will be ground.
+
+You can simply ground the variable normally. The usual +X = 3+ constrains the variable to a single value. 
 
 And the predicate +indomain/1+ successively binds a single variable to it's possible values on backtracking.
 
-But usually we call +label/1+ or +labeling/2+ to find a single ground solution. +label/1+ and +labeling/2+ are nondeterministic, binding a different set of values on each backtracking.
+But mostly we call +label/1+ or +labeling/2+ to find a single ground solution. +label/1+ and +labeling/2+ are nondeterministic, binding a different set of values on each backtracking.
 
 Of course our constraint system may not be powerful enough to express every constraint. If so, we must fall back on the generate and test search strategy familiar to all Prolog programmers. With constraint systems, generate and test becomes 
 
@@ -346,7 +348,7 @@ It's a good practice to set up the model and do the labeling and any remaining s
 The options in +labeling/2+ are also used with optimization problems of the 'make the most profit' type.
 
 Simple Constraints
------------------
+------------------
 
 clp(fd) provides a basic set of primitive constraints.
 
@@ -369,9 +371,9 @@ You can use +#=+ as a declarative version of +is+, in what is otherwise not a cl
 +X #< Y+ is useful to get rid of uninteresting symmetries. For example, if players 1 and 3 are matched in a tournament then there's no point considering the match 3 and 1. Consider this example taken from the SWI-Prolog documentation that finds all the ways to pair up 4 people:
 
 .Removing Symmetry
-==================
+====================
 
-------------------
+-------------------------------
 ?- Vs = [A,B,C,D], Vs ins 1..4,
         all_different(Vs),
         A #< B, C #< D, A #< C,
@@ -379,18 +381,20 @@ You can use +#=+ as a declarative version of +is+, in what is otherwise not a cl
 Ms = [ pair(1, 2)-pair(3, 4),
        pair(1, 3)-pair(2, 4),
        pair(1, 4)-pair(2, 3)].
--------------------
+-------------------------------
 	   
-==================
+====================
 
 
 .Strictly Increasing Exercise
-************
+*****************************
+
 Write a predicate +increase/1+ that takes a list and constrains it to be strictly increasing.
 
 First record what result you expect from each query below. Then test that your predicate does what you expect.
 
--------------------
+------------------------
+
 ?- increase([1, X, 3]).
 
 ?- increase([1, X, 4]).
@@ -400,9 +404,12 @@ First record what result you expect from each query below. Then test that your p
 ?- increase([1,2]).
 
 ?- increase([1,X]).
--------------------
 
-*************
+------------------------
+
+
+*****************************
+
 
 Constraining to a Domain
 ------------------------
@@ -411,17 +418,21 @@ Clp(fd) is concerned with the domains of variables.
 
 The _domain_ of a variable is simply the set of values it can take on.
 
-In clp(fd) every variable must be restricted to a "finite domain" in order to reason about it.
+In clp(fd) every variable must be restricted to a "finite domain" in order to reason about it. 
+You _do need_ to give variables a domain before you try to label them! If not, you'll get a baffling `ERROR: Arguments are not sufficiently instantiated` exception.
 
------------
+-----------------
 X in 5..10,   <1>
 Y in 1..10,   <2>
 Y #> X        <3>
------------
+-----------------
 
 <1> Set a domain for X - in this case 5 through 10
 <2> Set a domain for Y - 1 through 10
 <3> Now constraint Y to be more than X.  So we can reason about Y's domain. Y must be one of the values 6,7,8,9, or 10.
+
+
+Oddly, for all the talk of _finite_ domains, it's allowed to constrain a variable to a domain like `4..sup` - 4 through infinity. `inf` is negative infinity.
 
 In and Ins
 ~~~~~~~~~~
@@ -462,12 +473,14 @@ V in inf.. -2 \/ 0 \/ 2..16 \/ 18..sup
 Domain From Data
 ~~~~~~~~~~~~~~~~
 
-What if your domain data comes from input data? Assemble your domain as a term and use X in MyDomain. Here's an example
+What if your domain data comes from input data? Suppose we get a data structure from somewhere and need to constrain to it in some way.
+
+Assemble your domain as a term `MyDomain` and use `X in MyDomain`. Here's an example
 
 .A Domain From Data
-========================
+===================
 
-------------------------
+--------------------------------------------------------------------
 % Bases is a list of ints. Constrain Var to be within B..B+2 for B
 % a member of Bases
 
@@ -483,9 +496,9 @@ make_two_domains([H | T], '\\/'(H .. HT, TDomain)) :-
 	
 25 ?- two_domains([1, 8, 16], V).
  V in 1..3\/8..10\/16..18 ;
--------------------------
+--------------------------------------------------------------------
 
-=========================
+===================
 
 Arithmetic Operators
 --------------------
@@ -523,12 +536,12 @@ Unary. Inverts the contained constraint.
 +`#/\`+ And
 ~~~~~~~~~~~
 
-Constrains both sides to hold. Useful on left side of a +`#==>`+ operator (below).
+Constrains both sides to hold.
 
 +`#\/`+ Or
 ~~~~~~~~~~
 
-Constrains at least one side to hold. Useful on left side of a +`#==>`+ operator (below).
+Constrains at least one side to hold.
 
 Reification
 -----------
@@ -576,7 +589,7 @@ chem_demo(Temp, TimeNow, StartTime) :-
 Notice that +StartTime+ is passed in *as a constraint* . You can build a predicate
 that applies constraints and apply conditions under which they apply.
 
-==============================
+=============================
 
 .Employment exercise
 ************
@@ -586,8 +599,7 @@ record - eg. Bob's on parole and can't work more than 20 miles from home. Sally 
 People have funny situations, so try to make it general. 
 
 For this exercise you can make the (unrealistic) assumption that users know Prolog.
-
-*************
+************
 
 
 Commonly Useful Constraints
@@ -611,9 +623,8 @@ to generate a list of unbound variables.
 unbound variables, for example.
 
 .length Exercise
-************
+****************
 
-query 
 ------------
 ?- length(X, 5).
 ------------
@@ -624,7 +635,7 @@ Now try
 ?- length(X, Y).
 ------------
 
-************* 
+****************
 
 all_different(List)
 ~~~~~~~~~~~~~~~~~~~
@@ -642,7 +653,7 @@ List = [1, 2, 3, 4].
 
 All_distinct works like all_different, but 'tries harder' to detect when all are different.
 
-For example, 
+For example, let's try constraining 3 variables to be different values from 1..2 - an impossibility.
 
 ------------------------
 24 ?- X in 1..2, Y in 1..2, Z in 1..2, all_different([X,Y,Z]).
@@ -655,11 +666,11 @@ Z in 1..2.
 false.
  
 26 ?-
--------------------------
+------------------------
 
-In the above, all_different fails to detect that there are only two possible values for X, Y, and Z, so two of them must be the same.
+In the above, **all_different** fails to detect that there are only two possible values for X, Y, and Z, so two of them must be the same.
 
-all_distinct does more work to analyze the domains of it's variables, and does detect this condition. The cpu cost of using all_distinct is higher, however - so this needs balanced against performance gains from pruning the search tree earlier.
+**all_distinct** does more work to analyze the domains of it's variables, and does detect this condition. The cpu cost of using `all_distinct` is higher, however - so this needs balanced against performance gains from pruning the search tree earlier.
 
 If you are having performance issues it might be worth investigating using one or the other.
 
@@ -707,7 +718,7 @@ one solution.
 If you find yourself with tuples that look like +[[1,2], [2,7], [3,8]...]+ consider using +element/3+ instead.
 
 .tuples_in Exercise
-************
+*******************
 
 no 1. Modify the Train Journey program so it finds routes with any number of trains, not just 3.
  
@@ -743,7 +754,7 @@ time_in_grade([[1,25], [2,50]]).
 
 Update exercise 2 to use the new data format.
 
-************* 
+*******************
 
 Sudoku
 ~~~~~~
@@ -879,7 +890,7 @@ M = [
 [0,0,0,0,0,0,1,1],
 [0,0,0,0,0,0,0,1],
 [0,0,0,0,0,0,0,1],
-[0,0,0,0,0,0,2,0],
+[0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0],
@@ -927,7 +938,8 @@ Y in 11..20.
 Annie is here, looking like this =8cO trying to imagine debugging code that uses lots of zcompares
 
 .zcompare Exercise
-************
+******************
+
 create a constraint +same_side_of_line/4+ , whose arguments are dicts of the form
 
 ------------
@@ -936,7 +948,7 @@ point{x:12.34, y:56.78}
 
 The first two arguments are points on a line, the next two are two test points. The predicate succeds if both test points are on the same side of the line, or both are on the line, the constraint holds.
 
-*************
+******************
 
 Resources
 ----------
@@ -1001,7 +1013,7 @@ We often need things to be in a specific sequence.
 These constraints help establish sequences.
 
 chain(+List, +Relation)
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Chain establishes the Relation constraint between each
 pair of adjacent elements in List.
@@ -1018,7 +1030,8 @@ _G4676#>=_G4679,
 _G4679#>=_G4682,
 _G4682#>=_G4685.
 
----------------
+--------------
+
 
 lex_chain(+Lists)
 ~~~~~~~~~~~~~~~~~
@@ -1038,7 +1051,8 @@ been   <-- below beef because f is less than n
 Besides the obvious use of sorting text, lex_chain has other sorting uses.
 
 .Hospital Patients
-************
+******************
+
 Patients in a hospital have a coded set of information as a term.
 
 ------------
@@ -1069,7 +1083,7 @@ constrain the patients to be seen acording to these rules:
 
 Hint: use lex_chain
 
-*************
+******************
 
 element(?Index, +List, ?Element)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1117,9 +1131,9 @@ flirty_period(Period, Suzy, Nathan, John) :-
 	element(Period, Suzy, Class),
 	element(Period, Nathan, Class),
 	element(Period, John, DiffClass).
---------------------
+---------------------------
 
-======================================
+===========================================
 
 A very important use of element is in helping to constrain different facts. 
 
@@ -1217,8 +1231,8 @@ The green states are called source states, the blue ones sink states. A state co
 
 And here's how to encode it in SWI-Prolog:
 
-.singlesourceautomaton
-========================
+.single source automaton
+===========================
 
 -------------------------
 
@@ -1237,15 +1251,14 @@ demo_single_source(Vs) :-
 
 -------------------------
 
-========================
-
+===========================
 
 Here's a variation on our first automaton that accpets the same as the first automaton, but allows you to add 10 to all the numbers, so it accepts sequences like 10,10,10,10,11,12.
 
 image::images/automaton.png[Variation that also accepts sequences with each 10+ first]
 
-.multisourceautomaton
-=====================
+.multi source automaton
+==========================
 
 ----------------------
 
@@ -1265,9 +1278,9 @@ demo_len(Vs) :-
 	multi_source_automaton(Vs),
 	label(Vs).
 
------------------------
+----------------------
 
-======================
+==========================
 
 automaton/3 example - certain employees can't work at night, others on weekends, we encode this with an automaton that reads a list of who'se on shift.
 Maybe enough with the employee examples - how about valid messages?
@@ -1278,12 +1291,12 @@ example for counters - extend the employee example so employees get a max and mi
 
 
 Scheduling
----------
+----------
 
 Scheduling is something we do every day. Bob can only meet from 2 to 3, you need a couple uninterrupted hours to think about the data base, mom's coming by for lunch. It's also a major economic constraint - the factory can make tractor parts from march to july but has to convert to making beanie babies for christmas.
 
 serialized
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 Serialized expresses the common constraint of not being in two places at once. It takes two lists of the same length, the first is start times and the second durations. It constrains them that intervals defined by the starts and durations don't overlap. Notice that the starts don't have to be in order - that is, serialized([4,0,2], [1,1,1]) succeeds.
 
@@ -1344,9 +1357,9 @@ Durations = [2, 1, 2, 1, 1, 1] ;
 Starts = [9, 13, 14, 12, 11, 17],
 Durations = [2, 1, 2, 1, 1, 1] 
 
------------------------
+----------------------
 
-======================
+=====================
 
 global_cardinality/3
 ~~~~~~~~~~~~~~~~~~~~
@@ -1355,13 +1368,13 @@ global_cardinality/3
 
 Here's an example. Suppose we have a list of employees for the shifts in a 24/7 convenience store.
 
---------------
+----------------------------------------------------
 shifts([1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,4,5,6,4,5,3]).
---------------
+----------------------------------------------------
 
 we want to find out how many shifts each employee gets.
 
---------------
+----------------------------------------------------
 shifts([1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,4,5,6,4,5,3]).
 
 count_shifts(Counts) :-
@@ -1370,12 +1383,12 @@ count_shifts(Counts) :-
      length(Values, 6),
      pairs_keys_values(Counts, Keys, Values),
      global_cardinality(Shifts, Counts, []).
---------------
+----------------------------------------------------
 
 Remember, we're in constraint land, so this works even if you don't know 
 shifts 'ahead of time'
 
----------------
+--------------------------------------------
 post_shifts(Counts) :-
      length(UnknownShifts, 21),
      bagof(X, between(1,6,X), Keys),
@@ -1385,7 +1398,7 @@ post_shifts(Counts) :-
      % at this point I have Counts and UnknownShifts constrained,
      % though I don't know UnknownShifts
      shifts(UnknownShifts). % now it's bound
-----------------
+--------------------------------------------
 
 +global_cardinality/3+ has two options
 
@@ -1393,11 +1406,11 @@ post_shifts(Counts) :-
 * +cost(Cost, Matrix)+ - given a matrix of values for key i in position j, constrain the total cost to Cost
 
 .global_cardinality Exercise
-***************
+****************************
 
-Design an exercise that covers the +cost/2+ option of global_cardinality. Include a solution.
+Design an **exercise** that covers the +cost/2+ option of global_cardinality. Include a solution.
 
-***************
+****************************
 
 +cumulative/2+ and +cumulative/1+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1520,8 +1533,8 @@ Common sense is that, hopefully, radiation exposure will be less common than sni
 
 In Prolog this will look something like
 
-.betterOrder
-----------------
+.Better Order
+-----------------------------------------
 treatments([painkillers,
 			intubate,
 			bp_regulators,
@@ -1530,7 +1543,7 @@ treatments([painkillers,
 			anti_cobra_venom,
 			radiation_exposure
 			]).
------------------
+-----------------------------------------
 
 
 settings
@@ -1608,7 +1621,7 @@ For example, to implement a custom labeling strategy, you may need to inspect th
 .domainAsIntegers
 =================
 
------------------
+---------------------------------------------------------------
 dom_integers(D, Is) :- phrase(dom_integers_(D), Is).
 
 dom_integers_(I)      --> { integer(I) }, [I].
@@ -1620,7 +1633,7 @@ Example:
 D = 1..3\/5,
 Is = [1,2,3,5],
 X in 1..3\/5.
------------------
+---------------------------------------------------------------
 
 =================
 
@@ -1655,33 +1668,33 @@ By the same _shape_, we mean:
 .copyTerm
 ============
 
-------------
+--------------------------------------------------------
 10 ?- copy_term(foo([bar, A, meep(B, [1,2])], 3), Copy).
 Copy = foo([bar, _G2450, meep(_G2456, [1, 2])], 3).
-------------
+--------------------------------------------------------
 
 ============
 
 So what happens with constraints?
 
 .copyTermAttributes
-============
+===================
 
--------------
+-----------------------------------------------------------------------------
 3 ?- X in 0..10, Y in 0..5, X #< Y, copy_term(foo(X,Y), foo(XA, YA)), YA = 3.
 YA = 3,
 X in 0..4,
 X#=<Y+ -1,
 Y in 1..5,
 XA in 0..2.
--------------
+-----------------------------------------------------------------------------
 
-============
+===================
 
 Copying half of the constrained variables is generally not a great idea, you'll end up with links outside your constraint system. Not strictly forbidden, but do it only deliberately, since usually you want the constraint system in a 'stable' place you can come back to.
 
-.copyTermHalfAttributes
-============
+.copyTerm Half Attributes
+=========================
 
 -------------
 
@@ -1693,9 +1706,9 @@ Y in 1..5.
 
 --------------
 
-=============
+=========================
 
-.constrainedGraphics Exercise
+.Constrained Graphics Exercise
 ********************************
 
 Write a small graphics program, using whatever graphics environment you're comfortable with, that draws a set of dots on the screen. If you move one of the dots to be aligned with another, vertically or horizontally, within a few pixels, then the two should be linked, and move together. Holding down shift always just moves one dot.
@@ -1705,9 +1718,18 @@ Expand your program into a small diagram editor.
 
 (Note, you're near the end of the tutorial, you might want to read to the end at the same time you're working this problem).
 
-Implement a constraint shell decision support system. This should allow the user to define constraints one at a time using some simple command language (not programming) and see the domains of variables. The user should be able to remove any of the constraints they have entered. Sample run
+********************************
 
---------------
+.Constraint Shell
+***********************************************************************************************
+Implement a constraint shell decision support system. This should allow the user 
+to define constraints one at a time using some simple command language (not programming)
+and see the domains of variables. The user should be able to remove any of the constraints
+they have entered. 
+
+Sample run
+
+-----------------------------------
 ?-decision_support.
 Decision Support (type h for help)
 ds=h
@@ -1746,9 +1768,9 @@ constraints
 ds=q
 ?-
 
---------------
+-----------------------------------
 
-********************************
+***********************************************************************************************
 
 			
 Making Your Own Constraints
@@ -1756,14 +1778,14 @@ Making Your Own Constraints
 
 First, you often don't need to make a custom constraint, you need a custom convenience predicate. If you need 'sort of near to', which constrains X and Y to be N to M spaces from each other, then you can write a normal predicate that applies all the constraints. This is  what you've been doing all along in this tutorial.
 
-.sortOfNearTo
+.Sort Of Near To
 =================
 
------------------
+--------------------------------------------------------
 sort_of_near_to(X, Y, N, M) :-
 	X #> Y #==> X - N #>= Y  #/\  X - M - 1 #< Y,
 	X #=< Y #==> Y - N #>= X #/\ Y - M - 1 #< X.
------------------
+--------------------------------------------------------
 
 =================
 
@@ -1771,16 +1793,16 @@ If you do actually need to write a constraint, here's how.
 
 First, you'll need some setup
 
-.ownConstraintSetup
-====================
+.Own Constraint Setup
+======================
 
---------------------
+-----------------------------------------
 :- use_module(library(clpfd)).
 
 :- multifile clpfd:run_propagator/2.
---------------------
+-----------------------------------------
 
-====================
+======================
 
 then you need to define the predicate the user uses to apply your constraint.
 
@@ -1791,22 +1813,22 @@ There are three steps to complete in this predicate.
 3. Trigger the propagator so the initial state is set, we fail if we're overconstrained, and the initial domain is set, using +clpfd:trigger_once/1+ .
 
 
-.evenPred
+.Even Predicate
 ====================
 
---------------------
+-------------------------------------------------------
 % constrain X to be even
 even(X) :-
         clpfd:make_propagator(even(X), Prop),  <1>
         clpfd:init_propagator(X, Prop),  <2>
         clpfd:trigger_once(Prop). <3>
---------------------
-
-====================
+-------------------------------------------------------
 
 <1> Convert the constraint into an internal form +Prop+ , the _propagator_ .
 <2> Attach each variable (only X here) to the internal propagator.
 <3> Trigger the Propagator once to add the initial state to the system.
+
+====================
 
 Finally, you need to define the conditional check that's called when the constraint is evaluated. This requires adding a clause to +clpfd:run_propagator/2+ .
 
@@ -1814,25 +1836,25 @@ The first argument of +clpfd:run_propagator/2+ must match the declaration in +ma
 
 The second argument is a mutable state maintained by clp(fd). It can be used to 'kill' a constraint if it need no longer be triggered, if the constraint has failed or the variable is bound to a valid value, or if it's domain is now reduced to only values that meet the constraint.
 
-.evenCallback
+.Even Callback
 ====================
 
---------------------
+----------------------------------------------------------------
 % constrain X to be even
 clpfd:run_propagator(even(X), MState) :-
         (   integer(X) -> clpfd:kill(MState), 0 is X mod 2
         ;   true
         ).
---------------------
+----------------------------------------------------------------
 
 ====================
 
 And now we can use our new constraint.
 
-.newconstraint
+.New Constraint
 ====================
 
---------------------
+---------------------------------
 [debug] 26 ?- even(1).
 false.
 
@@ -1844,7 +1866,7 @@ X = 2.
 
 [debug] 29 ?- even(X),X = 3.
 false.
---------------------
+---------------------------------
 
 ====================
 
