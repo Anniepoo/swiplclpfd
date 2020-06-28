@@ -39,7 +39,7 @@ What Is clp(fd) good for?
 
 clp(fd) is a library included in the standard SWI-Prolog distribution. It solves problems that involve sets of variables, where relationships among the variables need satisfied.
 
-image::images/Robert_Wadlow.jpg[Robert Wadlow, at 108 inches the tallest person known]
+image::images/Robert_Wadlow.jpg["Robert Wadlow, at 108 inches the tallest person known", float="left"]
 clp(fd) is also useful for replacing many of the guard functions provided by getters and setters in OO languages. For example, if we don't know a person's actual height yet, we can still assert that it's more than 21 and less than 108 inches (shortest/tallest people known).
 When we eventually do find a solution, unreasonable values will be rejected.
 
@@ -47,6 +47,7 @@ clp(fd) is useful for optimizing search problems by reducing search spaces. Cons
 
 clp(fd) is useful for solving a wide variety of 'find values for these variables' problems. Here are some broad categories of problems that clp(fd) can address:
 
+ * Ensuring program correctness by constraining variables to reasonable ranges
  * Scheduling problems, like, 'when should we do what work in this factory to make these products?'
  * Optimization problems, like 'which mix of products should we make in this factory to maximize profits?'
  * Satisficing problems,  like finding an arrangement of rooms in a hospital that meets criteria like having the operating theater near the recovery rooms, or finding a set of vacation plans the whole family can agree on.
@@ -61,7 +62,14 @@ clp(fd) is useful for solving a wide variety of 'find values for these variables
 .Uses of clp(fd) Exercise
 *************************
 
-Make up another example for each of the categories above. Try to expand the domain of the problem as much as you can. For example, given a set of train cars, putting them in an order that makes sense and obeys some rules (e.g. no tank cars next to the engine, the caboose has to be on the back) is a sequence problem.
+Make up another example for each of the categories above. 
+
+Try to expand the domain of the problem as much as you can. 
+
+For example, we usually think of sequencing as time, but it could be some other dimension.
+Given a set of train cars, putting them in an order that makes sense and obeys some rules like no tank cars next to the engine, the caboose has to be on the back, etc. is a sequence problem.
+
+Don't worry if you have trouble with this one - it's OK to punt some.
 
 ************************* 
 
@@ -176,15 +184,15 @@ Here's how it looks in clp(fd). Don't worry if you don't understand all of this 
 :- use_module(library(clpfd)).         <1>
 
 test(X, Y) :-
-    X in 0..10,     <2>
+    X in 0..10,         <2>
 	Y in 4..8,      <3>
 	X #> Y.         <4>
 	 
 
 14 ?- test(X, Y).
-X in 5..10,           <5>
-Y#=<X+ -1,     <6>
-Y in 4..8.
+X in 5..10,             <5>
+Y#=<X,                  <6>
+Y in 4..8.  
 -------------------------------------------
 
 <1> include the clp(fd) library
@@ -470,6 +478,17 @@ V in inf.. -2 \/ 0 \/ 2..16 \/ 18..sup
 
 +ins+ constrains a list of variables to the same values, the equivilent of maplist over the list with in.
 
+.Overlapping Domains Exercise
+********************************************************
+
+Try the above _Complex Domain_ example, and
+then change the last range to `16 .. sup`.
+
+Notice that it simplifies the domain.
+
+********************************************************
+
+
 Domain From Data
 ~~~~~~~~~~~~~~~~
 
@@ -586,8 +605,11 @@ chem_demo(Temp, TimeNow, StartTime) :-
 
 -----------------------------
 
-Notice that +StartTime+ is passed in *as a constraint* . You can build a predicate
-that applies constraints and apply conditions under which they apply.
+Notice that +StartTime+ is passed in *as a constraint* , and used to apply
+to the logical operators.
+
+This means you can build up constraints and pass them around, applying them
+later, or building up more complex constraints using them.
 
 =============================
 
