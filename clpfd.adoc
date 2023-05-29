@@ -476,7 +476,7 @@ V in inf.. -2 \/ 0 \/ 2..16 \/ 18..sup
 
 +in+ constrains a single variable.
 
-+ins+ constrains a list of variables to the same values, the equivilent of maplist over the list with in.
++ins+ constrains a list of variables to the same values, the equivalent of maplist over the list with in.
 
 .Overlapping Domains Exercise
 ********************************************************
@@ -1110,7 +1110,7 @@ Hint: use lex_chain
 element(?Index, +List, ?Element)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Element is the constraint equivilent of +nth1/3+ .
+Element is the constraint equivalent of +nth1/3+ .
 
 It constrains an element of a list by it's location in the list. Element must be the Indexth member of List, counting from 1.
 
