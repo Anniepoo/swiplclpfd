@@ -1318,7 +1318,7 @@ Scheduling
 Scheduling is something we do every day. Bob can only meet from 2 to 3, you need a couple uninterrupted hours to think about the data base, mom's coming by for lunch. It's also a major economic constraint - the factory can make tractor parts from march to july but has to convert to making beanie babies for christmas.
 
 serialized
-~~~~~~~~~~~~
+~~~~~~~~~~
 
 Serialized expresses the common constraint of not being in two places at once. It takes two lists of the same length, the first is start times and the second durations. It constrains them that intervals defined by the starts and durations don't overlap. Notice that the starts don't have to be in order - that is, serialized([4,0,2], [1,1,1]) succeeds.
 
